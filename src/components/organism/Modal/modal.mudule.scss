@@ -1,0 +1,25 @@
+.ant-modal-header {
+    color: rgb(255, 255, 255) !important;
+    border-radius: 3px !important;
+    background: #ffffff !important;
+}
+
+.defectId {
+    font-size: 20px;
+    position: absolute;
+    font-weight: 600;
+    top: 16px;
+    left: 40%;
+}
+
+.defectId span {
+    font-weight: 700;
+    margin-right: 5px;
+}
+
+.custom-submit-btn:disabled {
+    background-color: #188fff6b !important;
+}
+.ant-modal-content {
+    border-radius: 3px !important;
+}

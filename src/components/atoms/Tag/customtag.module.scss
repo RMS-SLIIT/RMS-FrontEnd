@@ -1,0 +1,62 @@
+.status {
+    border-radius: 5px !important;
+    padding: 3px 12px !important;
+    text-align: center;
+    font-weight: 600;
+    width: 100%;
+    border: none !important;
+    -webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.06);
+    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.06);
+    min-height: 30px;
+}
+.small {
+    border-radius: 5px !important;
+    padding: 4px 12px !important;
+    text-align: center;
+    font-weight: 500;
+    border: none !important;
+    -webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.06);
+    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.06);
+    width: 80%;
+    height: 20px;
+}
+.priority {
+    border-radius: 5px;
+    padding: 4px 3px;
+    text-align: center;
+    font-weight: 600;
+}
+.severity {
+    border-radius: 5px;
+    padding: 4px 3px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.open {
+    color: #fff;
+    background: #f58e3d;
+}
+.reopen {
+    color: #fff;
+    background: #e0521b;
+}
+.closed {
+    color: #fff;
+    background: #326b1a;
+}
+
+.new {
+    color: rgb(41, 39, 39) !important;
+    background: #fffb00 !important;
+}
+
+.fixed {
+    color: rgb(32, 32, 32);
+    background: #4cfc01;
+}
+
+.rejected {
+    color: #fff;
+    background: #7a7a7a;
+}
