@@ -26,6 +26,13 @@ export const employeDeleteSuccess = () =>
         duration: 3
     });
 
+// vehicleBooking
+export const VehicleBookingDeleteSuccess = () =>
+    notification.success({
+        message: "Vehicle Booking Details successfully deleted",
+        duration: 3
+    });
+
 export const Notification = (message) => {
     return notification.success({
         message: message
