@@ -32,7 +32,6 @@ const AddBanquet = (props) => {
             .then((res) => {
                 console.log(res);
                 Notification("New Banquet Detail Added");
-                // banquetAddSuccess();
 
                 setAddVisible(false);
                 getBanquetDetails();

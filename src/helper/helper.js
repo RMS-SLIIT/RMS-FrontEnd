@@ -13,6 +13,19 @@ export const banquetDeleteSuccess = () =>
         duration: 3
     });
 
+// employee
+export const employeeAddSuccess = () =>
+    notification.success({
+        message: "Employee successfully added",
+        duration: 3
+    });
+
+export const employeDeleteSuccess = () =>
+    notification.success({
+        message: "Employee detail successfully deleted",
+        duration: 3
+    });
+
 export const Notification = (message) => {
     return notification.success({
         message: message
