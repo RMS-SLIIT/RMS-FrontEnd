@@ -5,13 +5,15 @@ import Modal from "../../organism/Modal/CustomModal";
 import "./AddBanquet.css";
 // import { errHandler, Notification } from "../../../../helper/helper";
 import { noSplCharRegex, phoneNumberRegex } from "../../../utils/regex";
+import { addBanquetDetails } from "../../../services/banquet/banquetServices";
+import { banquetAddSuccess, Notification } from "../../../helper/helper";
 
 const AddBanquet = (props) => {
     const [dateOfEvent, setDateOfEvent] = useState();
     const dateFormat = "YYYY-MM-DD";
 
     const {
-        // getAllDesignationData,
+        getBanquetDetails,
         viewData,
         setAddVisible,
         visible,
@@ -26,20 +28,18 @@ const AddBanquet = (props) => {
 
     const onFinish = (values) => {
         console.log("Success:", values);
-        // addDesignationApi(values)
-        //   .then((res) => {
-        //     console.log(res);
-        //     Notification("New designation added");
-        //     // designationAddSuccess();
+        addBanquetDetails(values)
+            .then((res) => {
+                console.log(res);
+                Notification("New Banquet Detail Added");
+                // banquetAddSuccess();
 
-        //     setAddVisible(false);
-        //     getAllDesignationData(currentPage, pageSize);
-        //   })
-        //   .catch((err) => {
-        //     console.log(err.validationFailures);
-
-        //     errHandler(err);
-        //   });
+                setAddVisible(false);
+                getBanquetDetails();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
 
         form.resetFields();
     };
@@ -159,7 +159,7 @@ const AddBanquet = (props) => {
                                     }
                                 ]}
                                 label="Decorations :  "
-                                name="decorations"
+                                name="decoration"
                             >
                                 <Input placeholder="Decorations" />
                             </Form.Item>

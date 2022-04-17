@@ -12,3 +12,9 @@ export const banquetDeleteSuccess = () =>
         message: "Banquet detail successfully deleted",
         duration: 3
     });
+
+export const Notification = (message) => {
+    return notification.success({
+        message: message
+    });
+};
