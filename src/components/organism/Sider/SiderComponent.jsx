@@ -10,6 +10,7 @@ import { useState } from "react";
 import "./SiderComponent.css";
 import Banquet from "../../pages/banquet/Banquet";
 import VehicleBooking from "../../pages/vehicleBooking/VehicleBooking";
+import RoomBooking from "../../pages/roomBooking/RoomBooking";
 import Employee from "../../pages/employee/Employee";
 import { Link, Routes, Route } from "react-router-dom";
 
@@ -75,13 +76,15 @@ function SiderComponent() {
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="4" icon={<KeyOutlined />}>
-                        <Tooltip
-                            trigger="hover"
-                            placement="topRight"
-                            title="Room Booking"
-                        >
-                            Room Booking
-                        </Tooltip>
+                        <Link to="/roomBooking">
+                            <Tooltip
+                                trigger="hover"
+                                placement="topRight"
+                                title="Room Booking"
+                            >
+                                Room Booking
+                            </Tooltip>
+                        </Link>
                     </Menu.Item>
                     <Menu.Item key="5" icon={<LogoutOutlined />}>
                         <Tooltip
@@ -115,6 +118,11 @@ function SiderComponent() {
                                 path="/employee"
                                 exact
                                 element={<Employee />}
+                            />
+                            <Route
+                                path="/roomBooking"
+                                exact
+                                element={<RoomBooking />}
                             />
                         </Routes>
                     </div>
