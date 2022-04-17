@@ -15,3 +15,5 @@ export const passwordRegex =
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
 export const empIdRegex = /^((emp|EMP)[0-9]{3})$/;
+
+export const nicRegex = /^\d{9}[V|v|x|X]$/;
