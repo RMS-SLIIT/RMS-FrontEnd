@@ -1,18 +1,18 @@
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Tooltip } from "antd";
 import {
-    DesktopOutlined,
-    PieChartOutlined,
-    FileOutlined,
-    TeamOutlined,
-    UserOutlined,
-    LogoutOutlined
+    LogoutOutlined,
+    KeyOutlined,
+    UserSwitchOutlined,
+    CarOutlined,
+    BulbOutlined
 } from "@ant-design/icons";
 import { useState } from "react";
 import "./SiderComponent.css";
 import Banquet from "../../pages/banquet/Banquet";
+import VehicleBooking from "../../pages/vehicleBooking/VehicleBooking";
+import { Link, Routes, Route } from "react-router-dom";
 
 const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
 
 function SiderComponent() {
     var currentYear = new Date().getFullYear();
@@ -40,26 +40,54 @@ function SiderComponent() {
                     </p>
                 </div>
                 <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-                    <Menu.Item key="1" icon={<PieChartOutlined />}>
-                        Option 1
+                    <Menu.Item key="1" icon={<BulbOutlined />}>
+                        <Link to="/">
+                            <Tooltip
+                                trigger="hover"
+                                placement="topRight"
+                                title="Banquet"
+                            >
+                                Banquet
+                            </Tooltip>
+                        </Link>
                     </Menu.Item>
-                    <Menu.Item key="2" icon={<DesktopOutlined />}>
-                        Option 2
+                    <Menu.Item key="2" icon={<CarOutlined />}>
+                        <Link to="/vehicleBooking">
+                            <Tooltip
+                                trigger="hover"
+                                placement="topRight"
+                                title="Vehicle Booking"
+                            >
+                                Vehicle Booking
+                            </Tooltip>
+                        </Link>
                     </Menu.Item>
-                    <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-                        <Menu.Item key="3">Tom</Menu.Item>
-                        <Menu.Item key="4">Bill</Menu.Item>
-                        <Menu.Item key="5">Alex</Menu.Item>
-                    </SubMenu>
-                    <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-                        <Menu.Item key="6">Team 1</Menu.Item>
-                        <Menu.Item key="8">Team 2</Menu.Item>
-                    </SubMenu>
-                    <Menu.Item key="9" icon={<FileOutlined />}>
-                        Files
+                    <Menu.Item key="3" icon={<UserSwitchOutlined />}>
+                        <Tooltip
+                            trigger="hover"
+                            placement="topRight"
+                            title="Employee"
+                        >
+                            Employee
+                        </Tooltip>
                     </Menu.Item>
-                    <Menu.Item key="10" icon={<LogoutOutlined />}>
-                        Logout
+                    <Menu.Item key="4" icon={<KeyOutlined />}>
+                        <Tooltip
+                            trigger="hover"
+                            placement="topRight"
+                            title="Room Booking"
+                        >
+                            Room Booking
+                        </Tooltip>
+                    </Menu.Item>
+                    <Menu.Item key="5" icon={<LogoutOutlined />}>
+                        <Tooltip
+                            trigger="hover"
+                            placement="topRight"
+                            title="Logout"
+                        >
+                            Logout
+                        </Tooltip>
                     </Menu.Item>
                 </Menu>
             </Sider>
@@ -73,7 +101,14 @@ function SiderComponent() {
                         className="site-layout-background"
                         style={{ padding: 24, minHeight: 360 }}
                     >
-                        <Banquet />
+                        <Routes>
+                            <Route path="/" element={<Banquet />} />
+                            <Route
+                                path="/vehicleBooking"
+                                exact
+                                element={<VehicleBooking />}
+                            />
+                        </Routes>
                     </div>
                 </Content>
                 <Footer style={{ textAlign: "center" }}>

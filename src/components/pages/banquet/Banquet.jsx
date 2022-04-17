@@ -5,53 +5,48 @@ import {
     QuestionCircleOutlined
 } from "@ant-design/icons";
 import { Button, Divider, Popconfirm } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { banquetDeleteSuccess } from "../../../helper/helper";
+import {
+    deleteBanquetDetailsById,
+    getAllBanquetDetails
+} from "../../../services/banquet/banquetServices";
 import { deleteConfirmMsg } from "../../../utils/messages";
 import CustomCard from "../../atoms/CustomCard/CustomCard";
 import CustomTable from "../../atoms/Table/CustomTable";
 import AddBanquet from "./AddBanquet";
 
 function Banquet() {
-    const dataSource = [
-        {
-            key: "1",
-            questName: "Mike",
-            mobileNumber: 777895632,
-            eventType: "Wedding",
-            additionalService: "N/A",
-            decorations: "N/A",
-            dateOfEvent: "2022-04-15"
-        },
-        {
-            key: "2",
-            questName: "John",
-            mobileNumber: 777525242,
-            eventType: "Birthday Party",
-            additionalService: "N/A",
-            decorations: "N/A",
-            dateOfEvent: "2022-04-15"
-        }
-    ];
     const [addVisible, setAddVisible] = useState(false);
+    const [banquetDetails, setBanquetDetails] = useState();
+
+    useEffect(() => {
+        getBanquetDetails();
+    }, []);
 
     const cancel = (e) => {};
 
+    const getBanquetDetails = () => {
+        getAllBanquetDetails()
+            .then((data) => {
+                console.log(data);
+                setBanquetDetails(data);
+            })
+            .catch((err) => {});
+    };
+
     const confirmDelete = (id) => {
         console.log("id is :" + id);
-        // deleteDesignation(id).then(
-        //   (res) => {
-        //     console.log(res);
-        //     getAllDesignationData(currentPage, pageSize);
-        //     designationDeleteSuccess();
-        //     // message.success("Successfully Deleted");
-        //   },
-        //   (error) => {
-        //     if (error.response.data) {
-        //       errHandler(error.response.data);
-        //       // console.log(error.response.data);
-        //     }
-        //   }
-        // );
+        deleteBanquetDetailsById(id).then(
+            (res) => {
+                console.log(res);
+                getBanquetDetails();
+                banquetDeleteSuccess();
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
     };
 
     const showAddBanquet = () => {
@@ -87,8 +82,8 @@ function Banquet() {
         },
         {
             title: "Decorations",
-            dataIndex: "decorations",
-            key: "decorations"
+            dataIndex: "decoration",
+            key: "decoration"
         },
         {
             title: "Date Of Event",
@@ -100,7 +95,7 @@ function Banquet() {
             dataIndex: "action",
             key: "action",
             align: "center",
-            render: (text, record = record) => (
+            render: (text, record = banquetDetails) => (
                 <span key={record.id}>
                     <EditOutlined
                         style={{ fontSize: "18px", color: "blue" }}
@@ -144,10 +139,10 @@ function Banquet() {
                 >
                     Add
                 </Button>
-                <CustomTable columns={columns} dataSource={dataSource} />
+                <CustomTable columns={columns} dataSource={banquetDetails} />
                 {addVisible ? (
                     <AddBanquet
-                        // getAllDesignationData={getAllDesignationData}
+                        getBanquetDetails={getBanquetDetails}
                         setAddVisible={setAddVisible}
                         visible={addVisible}
                         handleOk={handleAddOk}
