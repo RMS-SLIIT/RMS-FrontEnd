@@ -33,6 +33,19 @@ export const VehicleBookingDeleteSuccess = () =>
         duration: 3
     });
 
+// roomBooking
+export const roomBookingAddSuccess = () =>
+    notification.success({
+        message: "Room Booking successfully added",
+        duration: 3
+    });
+
+export const roomBokingDeleteSuccess = () =>
+    notification.success({
+        message: "Room Booking  detail successfully deleted",
+        duration: 3
+    });
+
 export const Notification = (message) => {
     return notification.success({
         message: message
