@@ -5,58 +5,54 @@ import {
     QuestionCircleOutlined,
     SearchOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Divider, Input, Popconfirm, Row } from "antd";
+import { Button, Divider, Popconfirm, Col, Row, Input } from "antd";
+import React, { useEffect, useState, useRef } from "react";
+import { convertSearchUrl } from "../../../helper/helper";
+import { RoomDeleteSuccess } from "../../../helper/helper";
 import Highlighter from "react-highlight-words";
-import React, { useEffect, useRef, useState } from "react";
-import {
-    convertSearchUrl,
-    roomBokingDeleteSuccess,
-} from "../../../helper/helper";
-import {
-    deleteRoomBookingByID,
-    getAllRoomBooking,
-    getTableMulitiSearch,
-} from "../../../services/roomBooking/roomBookingServices";
-
 import { deleteConfirmMsg } from "../../../utils/messages";
 import CustomCard from "../../atoms/CustomCard/CustomCard";
 import CustomTable from "../../atoms/Table/CustomTable";
-import AddRoomBooking from "./AddRoomBooking";
-import EditRoomBooking from "./EditRoomBooking";
+import AddRoom from "./AddRoom";
+import EditRoom from "./EditRoom";
+import {
+    deleteRoomDetailsById,
+    getAllRoomDetails,
+    getTableMulitiSearch,
+} from "../../../services/roomDetail/roomDetailServices";
 
-function RoomBooking() {
+function Inventory() {
     const [addVisible, setAddVisible] = useState(false);
-    const [RoomBookingDetails, setRoomBookingDetails] = useState();
     const [searchText, setSearchText] = useState();
     const [editVisible, setEditVisible] = useState(false);
     const [editData, setEditData] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState("");
+    const [roomDetails, setRoomDetails] = useState();
 
     const [searchUrl, setSearchUrl] = useState({
-        supplierName: "",
+        roomType: "",
     });
     const searchInput = useRef();
     useEffect(() => {
-        getRoomBookingDetails();
+        getRoomDetails();
     }, []);
 
     const cancel = (e) => {};
 
-    const getRoomBookingDetails = () => {
-        getAllRoomBooking()
+    const getRoomDetails = () => {
+        getAllRoomDetails()
             .then((data) => {
                 console.log(data);
-                setRoomBookingDetails(data);
+                setRoomDetails(data);
             })
             .catch((err) => {});
     };
-
     const onChangeSearch = (e, dataIndex) => {
         const { value } = e.target;
         setSearchedColumn(dataIndex);
         let updateUrl = {
             id: dataIndex === "id" ? value : searchUrl.id,
-            nic: dataIndex === "nic" ? value : searchUrl.nic,
+            roomType: dataIndex === "roomType" ? value : searchUrl.roomType,
         };
         setSearchUrl(updateUrl);
         searchApi(updateUrl);
@@ -64,8 +60,8 @@ function RoomBooking() {
 
     const searchApi = (updateUrl) => {
         let searchName = convertSearchUrl(updateUrl);
-        getTableMulitiSearch("roombookingsearch", searchName).then((data) => {
-            setRoomBookingDetails(data);
+        getTableMulitiSearch("roomdetailsearch", searchName).then((data) => {
+            setRoomDetails(data);
         });
     };
 
@@ -80,7 +76,7 @@ function RoomBooking() {
         clearFilters();
         let updateUrl = {
             id: dataIndex === "id" ? "" : searchUrl.id,
-            nic: dataIndex === "nic" ? "" : searchUrl.nic,
+            roomType: dataIndex === "roomType" ? "" : searchUrl.roomType,
         };
         setSearchUrl(updateUrl);
         searchApi(updateUrl);
@@ -103,7 +99,9 @@ function RoomBooking() {
                                 ref={searchInput}
                                 width="100%"
                                 placeholder={
-                                    dataIndex === "nic" ? "Search NIC" : ""
+                                    dataIndex === "roomType"
+                                        ? "Search roomType"
+                                        : ""
                                 }
                                 value={searchUrl[dataIndex]}
                                 onChange={(e) => onChangeSearch(e, dataIndex)}
@@ -178,11 +176,11 @@ function RoomBooking() {
 
     const confirmDelete = (id) => {
         console.log("id is :" + id);
-        deleteRoomBookingByID(id).then(
+        deleteRoomDetailsById(id).then(
             (res) => {
                 console.log(res);
-                getRoomBookingDetails();
-                roomBokingDeleteSuccess();
+                getRoomDetails();
+                RoomDeleteSuccess();
             },
             (error) => {
                 console.log(error);
@@ -202,7 +200,7 @@ function RoomBooking() {
         setEditVisible(true);
     };
 
-    const showAddRoomBooking = () => {
+    const showAddRoom = () => {
         setAddVisible(true);
     };
 
@@ -214,44 +212,43 @@ function RoomBooking() {
     };
     const columns = [
         {
-            title: "Name",
-            dataIndex: "fullName",
-            key: "fullName",
-        },
-        {
-            title: "Mobile No",
-            dataIndex: "mobileNumber",
-            key: "mobileNumber",
+            title: "Room Type",
+            dataIndex: "roomType",
+            key: "roomType",
+            ...getColumnSearchProps("roomType"),
         },
 
         {
-            title: "Check In Date",
-            dataIndex: "checkInDate",
-            key: "checkInDate",
+            title: "Customer No",
+            dataIndex: "customerNo",
+            key: "customerNo",
         },
         {
-            title: "Check Out Date",
-            dataIndex: "checkOutDate",
-            key: "checkOutDate",
-        },
-
-        {
-            title: "No Of Person",
-            dataIndex: "noOfPerson",
-            key: "noOfPerson",
+            title: "Facilities",
+            dataIndex: "facilities",
+            key: "facilities",
         },
         {
-            title: "NIC",
-            dataIndex: "nic",
-            key: "nic",
-            ...getColumnSearchProps("nic"),
+            title: "Room No",
+            dataIndex: "roomNo",
+            key: "roomNo",
+        },
+        {
+            title: "Period",
+            dataIndex: "period",
+            key: "period",
+        },
+        {
+            title: "Cost Per Day",
+            dataIndex: "costPerDay",
+            key: "costPerDay",
         },
         {
             title: "Action",
             dataIndex: "action",
             key: "action",
             align: "center",
-            render: (text, record = RoomBookingDetails) => (
+            render: (text, record = roomDetails) => (
                 <span key={record.id}>
                     <EditOutlined
                         style={{ fontSize: "18px", color: "blue" }}
@@ -290,26 +287,23 @@ function RoomBooking() {
                 <Button
                     icon={<PlusOutlined />}
                     type="primary"
-                    onClick={() => showAddRoomBooking()}
+                    onClick={() => showAddRoom()}
                     style={{ marginLeft: 950 }}
                 >
                     Add
                 </Button>
-                <CustomTable
-                    columns={columns}
-                    dataSource={RoomBookingDetails}
-                />
+                <CustomTable columns={columns} dataSource={roomDetails} />
                 {addVisible ? (
-                    <AddRoomBooking
-                        getRoomBookingDetails={getRoomBookingDetails}
+                    <AddRoom
+                        getRoomDetails={getRoomDetails}
                         setAddVisible={setAddVisible}
                         visible={addVisible}
                         handleOk={handleAddOk}
                         handleCancel={handleAddCancel}
                     />
                 ) : editVisible ? (
-                    <EditRoomBooking
-                        getRoomBookingDetails={getRoomBookingDetails}
+                    <EditRoom
+                        getRoomDetails={getRoomDetails}
                         setEditVisible={setEditVisible}
                         editData={editData}
                         visible={editVisible}
@@ -324,4 +318,4 @@ function RoomBooking() {
     );
 }
 
-export default RoomBooking;
+export default Inventory;

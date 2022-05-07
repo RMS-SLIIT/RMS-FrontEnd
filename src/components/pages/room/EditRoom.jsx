@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Col, Row } from "antd";
+import { Form, Col, Row, DatePicker } from "antd";
 import Input from "../../atoms/Input/CustomInput";
 import Modal from "../../organism/Modal/CustomModal";
 import "./AddRoom.css";
@@ -7,40 +7,40 @@ import {
     noSplCharRegex,
     onlyNumberRegex,
     phoneNumberRegex,
+    priceRegex,
 } from "../../../utils/regex";
-import { addRoomDetail } from "../../../services/roomDetail/roomDetailServices";
-import { Notification } from "../../../helper/helper";
+import { updateRoomDetail } from "../../../services/roomDetail/roomDetailServices";
+import { RoomUpdateSuccess } from "../../../helper/helper";
 
-const AddRoom = (props) => {
+function EditRoom(props) {
     const {
-        getRoomDetails,
-        viewData,
-        setAddVisible,
+        editData,
+        setEditVisible,
         visible,
         handleOk,
         handleCancel,
+        getRoomDetails,
     } = props;
-
     const [form] = Form.useForm();
-
     let show = visible;
-    form.setFieldsValue(viewData && viewData);
+
+    form.setFieldsValue(editData && editData);
 
     const onFinish = (values) => {
         console.log("Success:", values);
-        addRoomDetail(values)
+        updateRoomDetail(values)
             .then((res) => {
                 console.log(res);
-                Notification("New Room Detail Added");
 
-                setAddVisible(false);
+                form.resetFields();
+                RoomUpdateSuccess();
+
                 getRoomDetails();
+                setEditVisible(false);
             })
             .catch((err) => {
                 console.log(err);
             });
-
-        form.resetFields();
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -49,7 +49,7 @@ const AddRoom = (props) => {
 
     return (
         <Modal
-            title="New Room Detail"
+            title="Edit Room Detail"
             width="900px"
             action="form"
             visibleModal={show}
@@ -67,6 +67,13 @@ const AddRoom = (props) => {
                 >
                     <Row>
                         <Col span={12} style={{ padding: "5px" }}>
+                            <Form.Item label="Room ID" hidden={true} name="id">
+                                <Input
+                                    disabled={true}
+                                    style={{ width: "70%" }}
+                                    placeholder="Room Id"
+                                />
+                            </Form.Item>
                             <Form.Item
                                 className="formItem"
                                 rules={[
@@ -199,6 +206,6 @@ const AddRoom = (props) => {
             }
         />
     );
-};
+}
 
-export default AddRoom;
+export default EditRoom;

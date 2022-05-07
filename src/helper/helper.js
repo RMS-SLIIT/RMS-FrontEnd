@@ -19,6 +19,25 @@ export const banquetUpdateSuccess = () =>
         duration: 3,
     });
 
+// rooms
+export const RoomAddSuccess = () =>
+    notification.success({
+        message: "Room detail successfully added",
+        duration: 3,
+    });
+
+export const RoomDeleteSuccess = () =>
+    notification.success({
+        message: "Room detail successfully deleted",
+        duration: 3,
+    });
+
+export const RoomUpdateSuccess = () =>
+    notification.success({
+        message: "Room detail successfully updated",
+        duration: 3,
+    });
+
 // inventory
 export const inventoryAddSuccess = () =>
     notification.success({
@@ -68,6 +87,12 @@ export const roomBookingAddSuccess = () =>
 export const roomBokingDeleteSuccess = () =>
     notification.success({
         message: "Room Booking  detail successfully deleted",
+        duration: 3,
+    });
+
+export const roomBokingUpdateSuccess = () =>
+    notification.success({
+        message: "Room Booking  detail successfully Updated",
         duration: 3,
     });
 

@@ -1,30 +1,8 @@
 import { api } from "../axiosServices";
 
-export const getAllRoomBooking = () => {
+export const getAllRoomDetails = () => {
     return new Promise((resolve, reject) => {
-        api("GET", "base", `/roomBooking`, "", "", "")
-            .then((response) => {
-                resolve(response.data);
-            })
-            .catch((error) => {
-                reject(error);
-            });
-    });
-};
-export const addRoomBookingDetails = (data) => {
-    return new Promise((resolve, reject) => {
-        api("POST", "base", "/roomBooking", "", data, "")
-            .then((response) => {
-                resolve(response.data);
-            })
-            .catch((error) => {
-                reject(error);
-            });
-    });
-};
-export const deleteRoomBookingByID = (id) => {
-    return new Promise((resolve, reject) => {
-        api("DELETE", "base", "/roomBooking", "", "", id)
+        api("GET", "base", "/roomdetail", "", "", "")
             .then((response) => {
                 resolve(response.data);
             })
@@ -34,9 +12,45 @@ export const deleteRoomBookingByID = (id) => {
     });
 };
 
-export const updateRoomBooking = (data) => {
+export const addRoomDetail = (data) => {
     return new Promise((resolve, reject) => {
-        api("PUT", "base", "/roomBooking", "", data, "")
+        api("POST", "base", "/roomdetail", "", data, "")
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+};
+
+export const deleteRoomDetailsById = (id) => {
+    return new Promise((resolve, reject) => {
+        api("DELETE", "base", "/roomdetail", "", "", id)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+};
+
+export const getRoomDetailsById = (id) => {
+    return new Promise((resolve, reject) => {
+        api("GET", "base", `/roomdetail/${id}`, "", "", "")
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+};
+
+export const updateRoomDetail = (data) => {
+    return new Promise((resolve, reject) => {
+        api("PUT", "base", "/roomdetail", "", data, "")
             .then((response) => {
                 resolve(response.data);
             })
