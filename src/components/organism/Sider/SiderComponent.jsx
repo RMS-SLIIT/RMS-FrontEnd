@@ -6,6 +6,7 @@ import {
     CarOutlined,
     BulbOutlined,
     AppstoreAddOutlined,
+    WindowsOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
 import "./SiderComponent.css";
@@ -14,6 +15,7 @@ import VehicleBooking from "../../pages/vehicleBooking/VehicleBooking";
 import RoomBooking from "../../pages/roomBooking/RoomBooking";
 import Employee from "../../pages/employee/Employee";
 import Inventory from "../../pages/inventory/Inventory";
+import Room from "../../pages/room/Room";
 import { Link, Routes, Route } from "react-router-dom";
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -99,7 +101,18 @@ function SiderComponent() {
                             </Tooltip>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="6" icon={<LogoutOutlined />}>
+                    <Menu.Item key="6" icon={<WindowsOutlined />}>
+                        <Link to="/rooms">
+                            <Tooltip
+                                trigger="hover"
+                                placement="topRight"
+                                title="Rooms"
+                            >
+                                Rooms
+                            </Tooltip>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="7" icon={<LogoutOutlined />}>
                         <Tooltip
                             trigger="hover"
                             placement="topRight"
@@ -142,6 +155,7 @@ function SiderComponent() {
                                 exact
                                 element={<Inventory />}
                             />
+                            <Route path="/rooms" exact element={<Room />} />
                         </Routes>
                     </div>
                 </Content>
