@@ -6,45 +6,45 @@ import {
 } from "@ant-design/icons";
 import { Button, Divider, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
-import { banquetDeleteSuccess } from "../../../helper/helper";
+import { inventoryDeleteSuccess } from "../../../helper/helper";
 import {
-    deleteBanquetDetailsById,
-    getAllBanquetDetails,
-} from "../../../services/banquet/banquetServices";
+    deleteInventoryDetailsById,
+    getAllInventoryDetails,
+} from "../../../services/inventory/inventoryServices";
 import { deleteConfirmMsg } from "../../../utils/messages";
 import CustomCard from "../../atoms/CustomCard/CustomCard";
 import CustomTable from "../../atoms/Table/CustomTable";
-import AddBanquet from "./AddBanquet";
-import EditBanquet from "./EditBanquet";
+import AddInventory from "./AddInventory";
+import EditInventory from "./EditInventory";
 
-function Banquet() {
+function Inventory() {
     const [addVisible, setAddVisible] = useState(false);
-    const [banquetDetails, setBanquetDetails] = useState();
     const [editVisible, setEditVisible] = useState(false);
     const [editData, setEditData] = useState([]);
+    const [inventoryDetails, setInventoryDetails] = useState();
 
     useEffect(() => {
-        getBanquetDetails();
+        getInventoryDetails();
     }, []);
 
     const cancel = (e) => {};
 
-    const getBanquetDetails = () => {
-        getAllBanquetDetails()
+    const getInventoryDetails = () => {
+        getAllInventoryDetails()
             .then((data) => {
                 console.log(data);
-                setBanquetDetails(data);
+                setInventoryDetails(data);
             })
             .catch((err) => {});
     };
 
     const confirmDelete = (id) => {
         console.log("id is :" + id);
-        deleteBanquetDetailsById(id).then(
+        deleteInventoryDetailsById(id).then(
             (res) => {
                 console.log(res);
-                getBanquetDetails();
-                banquetDeleteSuccess();
+                getInventoryDetails();
+                inventoryDeleteSuccess();
             },
             (error) => {
                 console.log(error);
@@ -64,7 +64,7 @@ function Banquet() {
         setEditVisible(true);
     };
 
-    const showAddBanquet = () => {
+    const showAddInventory = () => {
         setAddVisible(true);
     };
 
@@ -76,41 +76,31 @@ function Banquet() {
     };
     const columns = [
         {
-            title: "Guest Name",
-            dataIndex: "guestName",
-            key: "guestName",
+            title: "Supplier Name",
+            dataIndex: "supplierName",
+            key: "supplierName",
         },
         {
-            title: "Mobile No",
-            dataIndex: "mobileNumber",
-            key: "mobileNumber",
+            title: "Supplier Disapplied Date",
+            dataIndex: "supplierDisappliedDate",
+            key: "supplierDisappliedDate",
         },
         {
-            title: "Event Type",
-            dataIndex: "eventType",
-            key: "eventType",
+            title: "Price",
+            dataIndex: "price",
+            key: "price",
         },
         {
-            title: "Additional Service",
-            dataIndex: "additionalService",
-            key: "additionalService",
-        },
-        {
-            title: "Decorations",
-            dataIndex: "decoration",
-            key: "decoration",
-        },
-        {
-            title: "Date Of Event",
-            dataIndex: "dateOfEvent",
-            key: "dateOfEvent",
+            title: "Quantity",
+            dataIndex: "quantity",
+            key: "quantity",
         },
         {
             title: "Action",
             dataIndex: "action",
             key: "action",
             align: "center",
-            render: (text, record = banquetDetails) => (
+            render: (text, record = inventoryDetails) => (
                 <span key={record.id}>
                     <EditOutlined
                         style={{ fontSize: "18px", color: "blue" }}
@@ -149,23 +139,23 @@ function Banquet() {
                 <Button
                     icon={<PlusOutlined />}
                     type="primary"
-                    onClick={() => showAddBanquet()}
+                    onClick={() => showAddInventory()}
                     style={{ marginLeft: 950 }}
                 >
                     Add
                 </Button>
-                <CustomTable columns={columns} dataSource={banquetDetails} />
+                <CustomTable columns={columns} dataSource={inventoryDetails} />
                 {addVisible ? (
-                    <AddBanquet
-                        getBanquetDetails={getBanquetDetails}
+                    <AddInventory
+                        getInventoryDetails={getInventoryDetails}
                         setAddVisible={setAddVisible}
                         visible={addVisible}
                         handleOk={handleAddOk}
                         handleCancel={handleAddCancel}
                     />
                 ) : editVisible ? (
-                    <EditBanquet
-                        getBanquetDetails={getBanquetDetails}
+                    <EditInventory
+                        getInventoryDetails={getInventoryDetails}
                         setEditVisible={setEditVisible}
                         editData={editData}
                         visible={editVisible}
@@ -180,4 +170,4 @@ function Banquet() {
     );
 }
 
-export default Banquet;
+export default Inventory;

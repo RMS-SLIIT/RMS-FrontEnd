@@ -1,8 +1,8 @@
 import { api } from "../axiosServices";
 
-export const getAllBanquetDetails = () => {
+export const getAllInventoryDetails = () => {
     return new Promise((resolve, reject) => {
-        api("GET", "base", "/banquet", "", "", "")
+        api("GET", "base", "/inventory", "", "", "")
             .then((response) => {
                 resolve(response.data);
             })
@@ -12,9 +12,9 @@ export const getAllBanquetDetails = () => {
     });
 };
 
-export const addBanquetDetails = (data) => {
+export const addInventoryDetails = (data) => {
     return new Promise((resolve, reject) => {
-        api("POST", "base", "/banquet", "", data, "")
+        api("POST", "base", "/inventory", "", data, "")
             .then((response) => {
                 resolve(response.data);
             })
@@ -24,9 +24,9 @@ export const addBanquetDetails = (data) => {
     });
 };
 
-export const deleteBanquetDetailsById = (id) => {
+export const deleteInventoryDetailsById = (id) => {
     return new Promise((resolve, reject) => {
-        api("DELETE", "base", "/banquet", "", "", id)
+        api("DELETE", "base", "/inventory", "", "", id)
             .then((response) => {
                 resolve(response.data);
             })
@@ -36,9 +36,9 @@ export const deleteBanquetDetailsById = (id) => {
     });
 };
 
-export const getBanquetDetailsById = (id) => {
+export const getInventoryDetailsById = (id) => {
     return new Promise((resolve, reject) => {
-        api("GET", "base", `/banquet/${id}`, "", "", "")
+        api("GET", "base", `/inventory/${id}`, "", "", "")
             .then((response) => {
                 resolve(response.data);
             })
@@ -48,9 +48,9 @@ export const getBanquetDetailsById = (id) => {
     });
 };
 
-export const updateBanquet = (data) => {
+export const updateInventory = (data) => {
     return new Promise((resolve, reject) => {
-        api("PUT", "base", "/banquet", "", data, "")
+        api("PUT", "base", "/inventory", "", data, "")
             .then((response) => {
                 resolve(response.data);
             })

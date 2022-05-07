@@ -4,7 +4,8 @@ import {
     KeyOutlined,
     UserSwitchOutlined,
     CarOutlined,
-    BulbOutlined
+    BulbOutlined,
+    AppstoreAddOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
 import "./SiderComponent.css";
@@ -12,6 +13,7 @@ import Banquet from "../../pages/banquet/Banquet";
 import VehicleBooking from "../../pages/vehicleBooking/VehicleBooking";
 import RoomBooking from "../../pages/roomBooking/RoomBooking";
 import Employee from "../../pages/employee/Employee";
+import Inventory from "../../pages/inventory/Inventory";
 import { Link, Routes, Route } from "react-router-dom";
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -35,7 +37,7 @@ function SiderComponent() {
                             fontSize: 35,
                             fontWeight: 600,
                             fontFamily: "cursive",
-                            marginLeft: 40
+                            marginLeft: 40,
                         }}
                     >
                         RMS
@@ -86,7 +88,18 @@ function SiderComponent() {
                             </Tooltip>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="5" icon={<LogoutOutlined />}>
+                    <Menu.Item key="5" icon={<AppstoreAddOutlined />}>
+                        <Link to="/inventory">
+                            <Tooltip
+                                trigger="hover"
+                                placement="topRight"
+                                title="Inventory"
+                            >
+                                Inventory
+                            </Tooltip>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="6" icon={<LogoutOutlined />}>
                         <Tooltip
                             trigger="hover"
                             placement="topRight"
@@ -123,6 +136,11 @@ function SiderComponent() {
                                 path="/roomBooking"
                                 exact
                                 element={<RoomBooking />}
+                            />
+                            <Route
+                                path="/inventory"
+                                exact
+                                element={<Inventory />}
                             />
                         </Routes>
                     </div>

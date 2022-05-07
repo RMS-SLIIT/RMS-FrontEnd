@@ -1,58 +1,50 @@
-import React, { useState } from "react";
-import { Form, Col, Row, DatePicker } from "antd";
+import React from "react";
+import { Form, Col, Row } from "antd";
 import Input from "../../atoms/Input/CustomInput";
 import Modal from "../../organism/Modal/CustomModal";
 import "./AddBanquet.css";
 import { noSplCharRegex, phoneNumberRegex } from "../../../utils/regex";
-import { addBanquetDetails } from "../../../services/banquet/banquetServices";
-import { Notification } from "../../../helper/helper";
+import { updateBanquet } from "../../../services/banquet/banquetServices";
+import { banquetUpdateSuccess } from "../../../helper/helper";
 
-const AddBanquet = (props) => {
-    const [dateOfEvent, setDateOfEvent] = useState();
-    const dateFormat = "YYYY-MM-DD";
-
+function EditBanquet(props) {
     const {
-        getBanquetDetails,
-        viewData,
-        setAddVisible,
+        editData,
+        setEditVisible,
         visible,
         handleOk,
         handleCancel,
+        getBanquetDetails,
     } = props;
-
     const [form] = Form.useForm();
-
     let show = visible;
-    form.setFieldsValue(viewData && viewData);
+
+    form.setFieldsValue(editData && editData);
 
     const onFinish = (values) => {
         console.log("Success:", values);
-        addBanquetDetails(values)
+        updateBanquet(values)
             .then((res) => {
                 console.log(res);
-                Notification("New Banquet Detail Added");
 
-                setAddVisible(false);
+                form.resetFields();
+                banquetUpdateSuccess();
+
                 getBanquetDetails();
+                setEditVisible(false);
             })
             .catch((err) => {
                 console.log(err);
             });
-
-        form.resetFields();
     };
 
     const onFinishFailed = (errorInfo) => {
         console.log("Failed:", errorInfo);
     };
 
-    const dateOnChange = (value, dateString) => {
-        setDateOfEvent(dateString);
-    };
-
     return (
         <Modal
-            title="New Banquet"
+            title="Edit Banquet"
             width="900px"
             action="form"
             visibleModal={show}
@@ -70,6 +62,17 @@ const AddBanquet = (props) => {
                 >
                     <Row>
                         <Col span={12} style={{ padding: "5px" }}>
+                            <Form.Item
+                                label="Banquet ID"
+                                hidden={true}
+                                name="id"
+                            >
+                                <Input
+                                    disabled={true}
+                                    style={{ width: "70%" }}
+                                    placeholder="Banquet Id"
+                                />
+                            </Form.Item>
                             <Form.Item
                                 className="formItem"
                                 rules={[
@@ -162,33 +165,11 @@ const AddBanquet = (props) => {
                                 <Input placeholder="Decorations" />
                             </Form.Item>
                         </Col>
-                        <Col span={12} style={{ padding: "5px" }}>
-                            <Form.Item
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Select date Of the Event",
-                                    },
-                                ]}
-                                label="Event Date :  "
-                                name="dateOfEvent"
-                            >
-                                <DatePicker
-                                    allowClear={true}
-                                    onChange={dateOnChange}
-                                    placeholder="Event Date"
-                                    showNow={true}
-                                    disabledTime={true}
-                                    format={dateFormat}
-                                    inputReadOnly={true}
-                                />
-                            </Form.Item>
-                        </Col>
                     </Row>
                 </Form>
             }
         />
     );
-};
+}
 
-export default AddBanquet;
+export default EditBanquet;
