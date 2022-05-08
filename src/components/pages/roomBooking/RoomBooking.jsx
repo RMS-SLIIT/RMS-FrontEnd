@@ -33,7 +33,7 @@ function RoomBooking() {
     const [searchedColumn, setSearchedColumn] = useState("");
 
     const [searchUrl, setSearchUrl] = useState({
-        supplierName: "",
+        nic: "",
     });
     const searchInput = useRef();
     useEffect(() => {

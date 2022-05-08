@@ -59,3 +59,15 @@ export const updateBanquet = (data) => {
             });
     });
 };
+
+export const getTableMulitiSearch = (url, field) => {
+    return new Promise((resolve, reject) => {
+        api("GET", "base", `/${url}?${field}`, "", "", "")
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+};
