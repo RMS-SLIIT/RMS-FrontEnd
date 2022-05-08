@@ -21,13 +21,14 @@ import {
     getTableMulitiSearch,
 } from "../../../services/roomDetail/roomDetailServices";
 
-function Inventory() {
+function Room() {
     const [addVisible, setAddVisible] = useState(false);
     const [searchText, setSearchText] = useState();
     const [editVisible, setEditVisible] = useState(false);
     const [editData, setEditData] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState("");
     const [roomDetails, setRoomDetails] = useState();
+    const [total, setTotal] = useState(0);
 
     const [searchUrl, setSearchUrl] = useState({
         roomType: "",
@@ -40,10 +41,15 @@ function Inventory() {
     const cancel = (e) => {};
 
     const getRoomDetails = () => {
+        let total = 0;
         getAllRoomDetails()
             .then((data) => {
                 console.log(data);
                 setRoomDetails(data);
+                data.map((tot) => {
+                    total = tot.period * tot.costPerDay + total;
+                });
+                setTotal(total);
             })
             .catch((err) => {});
     };
@@ -282,40 +288,43 @@ function Inventory() {
         },
     ];
     return (
-        <div>
-            <CustomCard width="100%" manage>
-                <Button
-                    icon={<PlusOutlined />}
-                    type="primary"
-                    onClick={() => showAddRoom()}
-                    style={{ marginLeft: 950 }}
-                >
-                    Add
-                </Button>
-                <CustomTable columns={columns} dataSource={roomDetails} />
-                {addVisible ? (
-                    <AddRoom
-                        getRoomDetails={getRoomDetails}
-                        setAddVisible={setAddVisible}
-                        visible={addVisible}
-                        handleOk={handleAddOk}
-                        handleCancel={handleAddCancel}
-                    />
-                ) : editVisible ? (
-                    <EditRoom
-                        getRoomDetails={getRoomDetails}
-                        setEditVisible={setEditVisible}
-                        editData={editData}
-                        visible={editVisible}
-                        handleOk={handleEditOk}
-                        handleCancel={handleEditCancel}
-                    />
-                ) : (
-                    <></>
-                )}
-            </CustomCard>
-        </div>
+        <>
+            <div>
+                <CustomCard width="100%" manage>
+                    <Button
+                        icon={<PlusOutlined />}
+                        type="primary"
+                        onClick={() => showAddRoom()}
+                        style={{ marginLeft: 950 }}
+                    >
+                        Add
+                    </Button>
+                    <CustomTable columns={columns} dataSource={roomDetails} />
+                    {addVisible ? (
+                        <AddRoom
+                            getRoomDetails={getRoomDetails}
+                            setAddVisible={setAddVisible}
+                            visible={addVisible}
+                            handleOk={handleAddOk}
+                            handleCancel={handleAddCancel}
+                        />
+                    ) : editVisible ? (
+                        <EditRoom
+                            getRoomDetails={getRoomDetails}
+                            setEditVisible={setEditVisible}
+                            editData={editData}
+                            visible={editVisible}
+                            handleOk={handleEditOk}
+                            handleCancel={handleEditCancel}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </CustomCard>
+            </div>
+            <div>Total Cost {total}</div>
+        </>
     );
 }
 
-export default Inventory;
+export default Room;

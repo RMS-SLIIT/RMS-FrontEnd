@@ -28,6 +28,7 @@ function Food() {
     const [editData, setEditData] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState("");
     const [foodDetails, setFoodDetails] = useState();
+    const [total, setTotal] = useState(0);
 
     const [searchUrl, setSearchUrl] = useState({
         foodName: "",
@@ -40,10 +41,15 @@ function Food() {
     const cancel = (e) => {};
 
     const getFoodDetails = () => {
+        let total = 0;
         getAllFood()
             .then((data) => {
                 console.log(data);
                 setFoodDetails(data);
+                data.map((tot) => {
+                    total = total + tot.price * tot.quantity;
+                });
+                setTotal(total);
             })
             .catch((err) => {});
     };
@@ -266,39 +272,42 @@ function Food() {
         },
     ];
     return (
-        <div>
-            <CustomCard width="100%" manage>
-                <Button
-                    icon={<PlusOutlined />}
-                    type="primary"
-                    onClick={() => showAddFood()}
-                    style={{ marginLeft: 950 }}
-                >
-                    Add
-                </Button>
-                <CustomTable columns={columns} dataSource={foodDetails} />
-                {addVisible ? (
-                    <AddFood
-                        getFoodDetails={getFoodDetails}
-                        setAddVisible={setAddVisible}
-                        visible={addVisible}
-                        handleOk={handleAddOk}
-                        handleCancel={handleAddCancel}
-                    />
-                ) : editVisible ? (
-                    <EditFood
-                        getFoodDetails={getFoodDetails}
-                        setEditVisible={setEditVisible}
-                        editData={editData}
-                        visible={editVisible}
-                        handleOk={handleEditOk}
-                        handleCancel={handleEditCancel}
-                    />
-                ) : (
-                    <></>
-                )}
-            </CustomCard>
-        </div>
+        <>
+            <div>
+                <CustomCard width="100%" manage>
+                    <Button
+                        icon={<PlusOutlined />}
+                        type="primary"
+                        onClick={() => showAddFood()}
+                        style={{ marginLeft: 950 }}
+                    >
+                        Add
+                    </Button>
+                    <CustomTable columns={columns} dataSource={foodDetails} />
+                    {addVisible ? (
+                        <AddFood
+                            getFoodDetails={getFoodDetails}
+                            setAddVisible={setAddVisible}
+                            visible={addVisible}
+                            handleOk={handleAddOk}
+                            handleCancel={handleAddCancel}
+                        />
+                    ) : editVisible ? (
+                        <EditFood
+                            getFoodDetails={getFoodDetails}
+                            setEditVisible={setEditVisible}
+                            editData={editData}
+                            visible={editVisible}
+                            handleOk={handleEditOk}
+                            handleCancel={handleEditCancel}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </CustomCard>
+            </div>
+            <div>Total Price :{total} </div>
+        </>
     );
 }
 
