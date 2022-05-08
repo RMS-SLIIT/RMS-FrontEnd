@@ -70,6 +70,12 @@ export const employeDeleteSuccess = () =>
         duration: 3,
     });
 
+export const employeUpdateSuccess = () =>
+    notification.success({
+        message: "Employee detail successfully Updated",
+        duration: 3,
+    });
+
 // vehicleBooking
 export const VehicleBookingDeleteSuccess = () =>
     notification.success({
