@@ -83,6 +83,12 @@ export const VehicleBookingDeleteSuccess = () =>
         duration: 3,
     });
 
+export const VehicleBookingUpdateSuccess = () =>
+    notification.success({
+        message: "Vehicle Booking Details successfully updated",
+        duration: 3,
+    });
+
 // roomBooking
 export const roomBookingAddSuccess = () =>
     notification.success({
