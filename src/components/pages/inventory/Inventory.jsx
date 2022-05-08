@@ -28,6 +28,7 @@ function Inventory() {
     const [editData, setEditData] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState("");
     const [inventoryDetails, setInventoryDetails] = useState();
+    const [total3, setTotal3] = useState(0);
 
     const [searchUrl, setSearchUrl] = useState({
         supplierName: "",
@@ -40,10 +41,16 @@ function Inventory() {
     const cancel = (e) => {};
 
     const getInventoryDetails = () => {
+        let total = 0;
         getAllInventoryDetails()
             .then((data) => {
                 console.log(data);
                 setInventoryDetails(data);
+                data.map((tot) => {
+                    total = total + tot.quantity * tot.price;
+                });
+                console.log("#######", total);
+                setTotal3(total);
             })
             .catch((err) => {});
     };
@@ -274,10 +281,13 @@ function Inventory() {
         },
     ];
 
-    let total = inventoryDetails.reduce(
-        (total, total2) => (total = total + total2.price * total2.quantity),
-        0
-    );
+    // const total =
+    //     inventoryDetails &&
+    //     inventoryDetails.reduce(
+    //         (total, total2) => (total = total + total2.price * total2.quantity),
+    //         0
+    //     );
+    // console.log(total);
     return (
         <>
             <div>
@@ -316,7 +326,7 @@ function Inventory() {
                     )}
                 </CustomCard>
             </div>
-            <div></div>
+            <div>Total cost {total3}</div>
         </>
     );
 }

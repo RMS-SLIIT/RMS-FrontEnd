@@ -31,6 +31,7 @@ function Transport() {
     const [editData, setEditData] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState("");
     const [transportDetails, setTransportDetails] = useState();
+    const [total, setTotal] = useState(0);
 
     const [searchUrl, setSearchUrl] = useState({
         vehicleType: "",
@@ -43,10 +44,15 @@ function Transport() {
     const cancel = (e) => {};
 
     const getTransportDetails = () => {
+        let total = 0;
         getAllTransport()
             .then((data) => {
                 console.log(data);
                 setTransportDetails(data);
+                data.map((tot) => {
+                    total = tot.cost + total;
+                });
+                setTotal(total);
             })
             .catch((err) => {});
     };
@@ -277,39 +283,45 @@ function Transport() {
         },
     ];
     return (
-        <div>
-            <CustomCard width="100%" manage>
-                <Button
-                    icon={<PlusOutlined />}
-                    type="primary"
-                    onClick={() => showAddTransport()}
-                    style={{ marginLeft: 950 }}
-                >
-                    Add
-                </Button>
-                <CustomTable columns={columns} dataSource={transportDetails} />
-                {addVisible ? (
-                    <AddTransport
-                        getTransportDetails={getTransportDetails}
-                        setAddVisible={setAddVisible}
-                        visible={addVisible}
-                        handleOk={handleAddOk}
-                        handleCancel={handleAddCancel}
+        <>
+            <div>
+                <CustomCard width="100%" manage>
+                    <Button
+                        icon={<PlusOutlined />}
+                        type="primary"
+                        onClick={() => showAddTransport()}
+                        style={{ marginLeft: 950 }}
+                    >
+                        Add
+                    </Button>
+                    <CustomTable
+                        columns={columns}
+                        dataSource={transportDetails}
                     />
-                ) : editVisible ? (
-                    <EditTransport
-                        getTransportDetails={getTransportDetails}
-                        setEditVisible={setEditVisible}
-                        editData={editData}
-                        visible={editVisible}
-                        handleOk={handleEditOk}
-                        handleCancel={handleEditCancel}
-                    />
-                ) : (
-                    <></>
-                )}
-            </CustomCard>
-        </div>
+                    {addVisible ? (
+                        <AddTransport
+                            getTransportDetails={getTransportDetails}
+                            setAddVisible={setAddVisible}
+                            visible={addVisible}
+                            handleOk={handleAddOk}
+                            handleCancel={handleAddCancel}
+                        />
+                    ) : editVisible ? (
+                        <EditTransport
+                            getTransportDetails={getTransportDetails}
+                            setEditVisible={setEditVisible}
+                            editData={editData}
+                            visible={editVisible}
+                            handleOk={handleEditOk}
+                            handleCancel={handleEditCancel}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </CustomCard>
+            </div>
+            <div>Total Cost {total}</div>
+        </>
     );
 }
 
