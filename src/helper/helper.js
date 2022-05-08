@@ -70,10 +70,22 @@ export const employeDeleteSuccess = () =>
         duration: 3,
     });
 
+export const employeUpdateSuccess = () =>
+    notification.success({
+        message: "Employee detail successfully Updated",
+        duration: 3,
+    });
+
 // vehicleBooking
 export const VehicleBookingDeleteSuccess = () =>
     notification.success({
         message: "Vehicle Booking Details successfully deleted",
+        duration: 3,
+    });
+
+export const VehicleBookingUpdateSuccess = () =>
+    notification.success({
+        message: "Vehicle Booking Details successfully updated",
         duration: 3,
     });
 
@@ -96,6 +108,44 @@ export const roomBokingUpdateSuccess = () =>
         duration: 3,
     });
 
+// transport
+export const transportAddSuccess = () =>
+    notification.success({
+        message: "Transport successfully added",
+        duration: 3,
+    });
+
+export const transportDeleteSuccess = () =>
+    notification.success({
+        message: "Transport  detail successfully deleted",
+        duration: 3,
+    });
+
+export const transportUpdateSuccess = () =>
+    notification.success({
+        message: "Transport  detail successfully Updated",
+        duration: 3,
+    });
+
+// food
+export const foodAddSuccess = () =>
+    notification.success({
+        message: "Food successfully added",
+        duration: 3,
+    });
+
+export const foodDeleteSuccess = () =>
+    notification.success({
+        message: "Food  detail successfully deleted",
+        duration: 3,
+    });
+
+export const foodUpdateSuccess = () =>
+    notification.success({
+        message: "Food  detail successfully Updated",
+        duration: 3,
+    });
+
 //convert search url
 export const convertSearchUrl = (updateUrl) => {
     console.log(updateUrl);
@@ -104,7 +154,7 @@ export const convertSearchUrl = (updateUrl) => {
     let url = [];
     for (let i = 0; i < fields.length; i++) {
         url.push(
-            `${fields[i]}=${fieldValues[i] == undefined ? "" : fieldValues[i]}` //sarath
+            `${fields[i]}=${fieldValues[i] === undefined ? "" : fieldValues[i]}` //sarath
         );
     }
     let searchUrl = url.join("&");

@@ -7,6 +7,7 @@ import {
     BulbOutlined,
     AppstoreAddOutlined,
     WindowsOutlined,
+    HeatMapOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
 import "./SiderComponent.css";
@@ -16,6 +17,8 @@ import RoomBooking from "../../pages/roomBooking/RoomBooking";
 import Employee from "../../pages/employee/Employee";
 import Inventory from "../../pages/inventory/Inventory";
 import Room from "../../pages/room/Room";
+import Food from "../../pages/Food/Food";
+import Transport from "../../pages/Transport/Transport";
 import { Link, Routes, Route } from "react-router-dom";
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -112,7 +115,29 @@ function SiderComponent() {
                             </Tooltip>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="7" icon={<LogoutOutlined />}>
+                    <Menu.Item key="7" icon={<CarOutlined />}>
+                        <Link to="/transport">
+                            <Tooltip
+                                trigger="hover"
+                                placement="topRight"
+                                title="Transport"
+                            >
+                                Transport
+                            </Tooltip>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="8" icon={<HeatMapOutlined />}>
+                        <Link to="/food">
+                            <Tooltip
+                                trigger="hover"
+                                placement="topRight"
+                                title="Food"
+                            >
+                                Food
+                            </Tooltip>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="9" icon={<LogoutOutlined />}>
                         <Tooltip
                             trigger="hover"
                             placement="topRight"
@@ -156,6 +181,12 @@ function SiderComponent() {
                                 element={<Inventory />}
                             />
                             <Route path="/rooms" exact element={<Room />} />
+                            <Route
+                                path="/transport"
+                                exact
+                                element={<Transport />}
+                            />
+                            <Route path="/food" exact element={<Food />} />
                         </Routes>
                     </div>
                 </Content>

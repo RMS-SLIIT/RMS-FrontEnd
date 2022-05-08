@@ -1,22 +1,19 @@
 import React, { useState } from "react";
-import { Form, Col, Row, DatePicker, InputNumber } from "antd";
+import { Form, Col, Row, DatePicker } from "antd";
 import Input from "../../atoms/Input/CustomInput";
 import Modal from "../../organism/Modal/CustomModal";
-import "./AddInventory.css";
+import "./Food.css";
 import {
     noSplCharRegex,
     onlyNumberRegex,
     priceRegex,
 } from "../../../utils/regex";
-import { addInventoryDetails } from "../../../services/inventory/inventoryServices";
+import { addFood } from "../../../services/Food/foodServices";
 import { Notification } from "../../../helper/helper";
 
 const AddInventory = (props) => {
-    const [supplierDisappliedDate, setSupplierDisappliedDate] = useState();
-    const dateFormat = "YYYY-MM-DD";
-
     const {
-        getInventoryDetails,
+        getFoodDetails,
         viewData,
         setAddVisible,
         visible,
@@ -31,13 +28,13 @@ const AddInventory = (props) => {
 
     const onFinish = (values) => {
         console.log("Success:", values);
-        addInventoryDetails(values)
+        addFood(values)
             .then((res) => {
                 console.log(res);
-                Notification("New Inventory Detail Added");
+                Notification("New Food Detail Added");
 
                 setAddVisible(false);
-                getInventoryDetails();
+                getFoodDetails();
             })
             .catch((err) => {
                 console.log(err);
@@ -50,17 +47,9 @@ const AddInventory = (props) => {
         console.log("Failed:", errorInfo);
     };
 
-    const dateOnChange = (value, dateString) => {
-        setSupplierDisappliedDate(dateString);
-    };
-
-    function onChangeQty(value) {
-        console.log("changed", value);
-    }
-
     return (
         <Modal
-            title="New Inventory Detail"
+            title="New Food Detail"
             width="900px"
             action="form"
             visibleModal={show}
@@ -73,7 +62,7 @@ const AddInventory = (props) => {
                     form={form}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
-                    className="addInventory"
+                    className="addFood"
                     initialValues={{ remember: true }}
                 >
                     <Row>
@@ -92,33 +81,10 @@ const AddInventory = (props) => {
                                         message: "Enter valid Name",
                                     },
                                 ]}
-                                label="Supplier Name :  "
-                                name="supplierName"
+                                label="Food Name :  "
+                                name="foodName"
                             >
-                                <Input placeholder="Supplier Name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12} style={{ padding: "5px" }}>
-                            <Form.Item
-                                rules={[
-                                    {
-                                        required: true,
-                                        message:
-                                            "Select Supplier Disaplied Date",
-                                    },
-                                ]}
-                                label="Supplier Disaplied Date :  "
-                                name="supplierDisappliedDate"
-                            >
-                                <DatePicker
-                                    allowClear={true}
-                                    onChange={dateOnChange}
-                                    placeholder="Supplier Disaplied Date"
-                                    showNow={true}
-                                    disabledTime={true}
-                                    format={dateFormat}
-                                    inputReadOnly={true}
-                                />
+                                <Input placeholder="Food Name" />
                             </Form.Item>
                         </Col>
                     </Row>

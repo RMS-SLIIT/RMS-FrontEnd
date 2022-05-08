@@ -2,23 +2,18 @@ import React from "react";
 import { Form, Col, Row } from "antd";
 import Input from "../../atoms/Input/CustomInput";
 import Modal from "../../organism/Modal/CustomModal";
-import "./AddInventory.css";
-import {
-    noSplCharRegex,
-    onlyNumberRegex,
-    priceRegex,
-} from "../../../utils/regex";
-import { updateInventory } from "../../../services/inventory/inventoryServices";
-import { inventoryUpdateSuccess } from "../../../helper/helper";
+import { nicRegex, phoneNumberRegex } from "../../../utils/regex";
+import { updateVehicleBooking } from "../../../services/vehicleBooking/vehicleBookingServices";
+import { VehicleBookingUpdateSuccess } from "../../../helper/helper";
 
-function EditInventory(props) {
+function EditVehicleBooking(props) {
     const {
         editData,
         setEditVisible,
         visible,
         handleOk,
         handleCancel,
-        getInventoryDetails,
+        getVehicleBookingDetails,
     } = props;
     const [form] = Form.useForm();
     let show = visible;
@@ -27,14 +22,14 @@ function EditInventory(props) {
 
     const onFinish = (values) => {
         console.log("Success:", values);
-        updateInventory(values)
+        updateVehicleBooking(values)
             .then((res) => {
                 console.log(res);
 
                 form.resetFields();
-                inventoryUpdateSuccess();
+                VehicleBookingUpdateSuccess();
 
-                getInventoryDetails();
+                getVehicleBookingDetails();
                 setEditVisible(false);
             })
             .catch((err) => {
@@ -48,7 +43,7 @@ function EditInventory(props) {
 
     return (
         <Modal
-            title="Edit Inventory Detail"
+            title="Edit Vehicle"
             width="900px"
             action="form"
             visibleModal={show}
@@ -61,20 +56,20 @@ function EditInventory(props) {
                     form={form}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
-                    className="addInventory"
+                    className="addVehicle"
                     initialValues={{ remember: true }}
                 >
                     <Row>
                         <Col span={12} style={{ padding: "5px" }}>
                             <Form.Item
-                                label="Inventory ID"
+                                label="Vehicle Booking ID"
                                 hidden={true}
                                 name="id"
                             >
                                 <Input
                                     disabled={true}
                                     style={{ width: "70%" }}
-                                    placeholder="Inventory Id"
+                                    placeholder="Vehicle Booking Id"
                                 />
                             </Form.Item>
                             <Form.Item
@@ -85,16 +80,61 @@ function EditInventory(props) {
                                         message:
                                             "Sorry you are exceeding the limit!",
                                     },
-
+                                ]}
+                                label="User Name :  "
+                                name="userName"
+                            >
+                                <Input placeholder="User Name" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12} style={{ padding: "5px" }}>
+                            <Form.Item
+                                rules={[
                                     {
-                                        pattern: new RegExp(noSplCharRegex),
-                                        message: "Enter valid Name",
+                                        required: true,
+                                        message: "Select date Of the Event",
                                     },
                                 ]}
-                                label="Supplier Name :  "
-                                name="supplierName"
+                                label="No Of Km :  "
+                                name="noOfKm"
                             >
-                                <Input placeholder="Guest Name" />
+                                <Input placeholder="No Of Km" />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={12} style={{ padding: "5px" }}>
+                            <Form.Item
+                                label="Email"
+                                rules={[
+                                    {
+                                        type: "email",
+
+                                        message: "Enter valid email address",
+                                    },
+                                    {
+                                        required: true,
+                                        message: "Enter email address",
+                                    },
+                                ]}
+                                name="email"
+                            >
+                                <Input placeholder="example@example.com" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12} style={{ padding: "5px" }}>
+                            <Form.Item
+                                className="formItem"
+                                rules={[
+                                    {
+                                        pattern: new RegExp(phoneNumberRegex),
+                                        message: "Enter valid Mobile Number",
+                                    },
+                                ]}
+                                label="Mobile Number :  "
+                                name="mobileNumber"
+                            >
+                                <Input placeholder="07x xxxx xxx" />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -102,21 +142,10 @@ function EditInventory(props) {
                         <Col span={12} style={{ padding: "5px" }}>
                             <Form.Item
                                 className="formItem"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Enter Price",
-                                    },
-                                    {
-                                        pattern: new RegExp(priceRegex),
-                                        message:
-                                            "Enter valid Price Ex: 1000.00",
-                                    },
-                                ]}
-                                label="Price :  "
-                                name="price"
+                                label="Cost :  "
+                                name="cost"
                             >
-                                <Input placeholder="Price" />
+                                <Input placeholder="cost" />
                             </Form.Item>
                         </Col>
                         <Col span={12} style={{ padding: "5px" }}>
@@ -124,15 +153,15 @@ function EditInventory(props) {
                                 className="formItem"
                                 rules={[
                                     {
-                                        pattern: new RegExp(onlyNumberRegex),
-                                        message:
-                                            "Enter valid Price (only Numbers)",
+                                        pattern: new RegExp(nicRegex),
+                                        message: "Enter NIC number",
                                     },
                                 ]}
-                                label="Quantity :  "
-                                name="quantity"
+                                label="NIC :  "
+                                name="nic"
+                                nicRegex
                             >
-                                <Input placeholder="Quantity" />
+                                <Input placeholder="NIC" />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -142,4 +171,4 @@ function EditInventory(props) {
     );
 }
 
-export default EditInventory;
+export default EditVehicleBooking;

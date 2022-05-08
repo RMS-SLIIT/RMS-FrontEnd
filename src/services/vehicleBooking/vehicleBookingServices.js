@@ -35,3 +35,27 @@ export const deleteVehicleBookingDetailsById = (id) => {
             });
     });
 };
+
+export const updateVehicleBooking = (data) => {
+    return new Promise((resolve, reject) => {
+        api("PUT", "base", "/vehicleBooking", "", data, "")
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+};
+
+export const getTableMulitiSearch = (url, field) => {
+    return new Promise((resolve, reject) => {
+        api("GET", "base", `/${url}?${field}`, "", "", "")
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+};

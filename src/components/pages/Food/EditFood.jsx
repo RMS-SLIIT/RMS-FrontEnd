@@ -1,66 +1,54 @@
-import React, { useState } from "react";
-import { Form, Col, Row, DatePicker, InputNumber } from "antd";
+import React from "react";
+import { Form, Col, Row } from "antd";
 import Input from "../../atoms/Input/CustomInput";
 import Modal from "../../organism/Modal/CustomModal";
-import "./AddInventory.css";
+import "./Food.css";
 import {
     noSplCharRegex,
     onlyNumberRegex,
     priceRegex,
 } from "../../../utils/regex";
-import { addInventoryDetails } from "../../../services/inventory/inventoryServices";
-import { Notification } from "../../../helper/helper";
+import { updateFood } from "../../../services/Food/foodServices";
+import { foodUpdateSuccess } from "../../../helper/helper";
 
-const AddInventory = (props) => {
-    const [supplierDisappliedDate, setSupplierDisappliedDate] = useState();
-    const dateFormat = "YYYY-MM-DD";
-
+function EditFood(props) {
     const {
-        getInventoryDetails,
-        viewData,
-        setAddVisible,
+        editData,
+        setEditVisible,
         visible,
         handleOk,
         handleCancel,
+        getFoodDetails,
     } = props;
-
     const [form] = Form.useForm();
-
     let show = visible;
-    form.setFieldsValue(viewData && viewData);
+
+    form.setFieldsValue(editData && editData);
 
     const onFinish = (values) => {
         console.log("Success:", values);
-        addInventoryDetails(values)
+        updateFood(values)
             .then((res) => {
                 console.log(res);
-                Notification("New Inventory Detail Added");
 
-                setAddVisible(false);
-                getInventoryDetails();
+                form.resetFields();
+                foodUpdateSuccess();
+
+                getFoodDetails();
+                setEditVisible(false);
             })
             .catch((err) => {
                 console.log(err);
             });
-
-        form.resetFields();
     };
 
     const onFinishFailed = (errorInfo) => {
         console.log("Failed:", errorInfo);
     };
 
-    const dateOnChange = (value, dateString) => {
-        setSupplierDisappliedDate(dateString);
-    };
-
-    function onChangeQty(value) {
-        console.log("changed", value);
-    }
-
     return (
         <Modal
-            title="New Inventory Detail"
+            title="Edit Food Detail"
             width="900px"
             action="form"
             visibleModal={show}
@@ -73,11 +61,18 @@ const AddInventory = (props) => {
                     form={form}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
-                    className="addInventory"
+                    className="addFood"
                     initialValues={{ remember: true }}
                 >
                     <Row>
                         <Col span={12} style={{ padding: "5px" }}>
+                            <Form.Item label="Food ID" hidden={true} name="id">
+                                <Input
+                                    disabled={true}
+                                    style={{ width: "70%" }}
+                                    placeholder="Food Id"
+                                />
+                            </Form.Item>
                             <Form.Item
                                 className="formItem"
                                 rules={[
@@ -92,33 +87,10 @@ const AddInventory = (props) => {
                                         message: "Enter valid Name",
                                     },
                                 ]}
-                                label="Supplier Name :  "
-                                name="supplierName"
+                                label="Food Name :  "
+                                name="foodName"
                             >
-                                <Input placeholder="Supplier Name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12} style={{ padding: "5px" }}>
-                            <Form.Item
-                                rules={[
-                                    {
-                                        required: true,
-                                        message:
-                                            "Select Supplier Disaplied Date",
-                                    },
-                                ]}
-                                label="Supplier Disaplied Date :  "
-                                name="supplierDisappliedDate"
-                            >
-                                <DatePicker
-                                    allowClear={true}
-                                    onChange={dateOnChange}
-                                    placeholder="Supplier Disaplied Date"
-                                    showNow={true}
-                                    disabledTime={true}
-                                    format={dateFormat}
-                                    inputReadOnly={true}
-                                />
+                                <Input placeholder="Food Name" />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -164,6 +136,6 @@ const AddInventory = (props) => {
             }
         />
     );
-};
+}
 
-export default AddInventory;
+export default EditFood;

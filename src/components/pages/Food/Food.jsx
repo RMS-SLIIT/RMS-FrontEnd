@@ -8,46 +8,46 @@ import {
 import { Button, Divider, Popconfirm, Col, Row, Input } from "antd";
 import React, { useEffect, useState, useRef } from "react";
 import { convertSearchUrl } from "../../../helper/helper";
-import { RoomDeleteSuccess } from "../../../helper/helper";
+import { foodDeleteSuccess } from "../../../helper/helper";
+import {
+    getTableMulitiSearch,
+    deleteFoodById,
+    getAllFood,
+} from "../../../services/Food/foodServices";
 import Highlighter from "react-highlight-words";
 import { deleteConfirmMsg } from "../../../utils/messages";
 import CustomCard from "../../atoms/CustomCard/CustomCard";
 import CustomTable from "../../atoms/Table/CustomTable";
-import AddRoom from "./AddRoom";
-import EditRoom from "./EditRoom";
-import {
-    deleteRoomDetailsById,
-    getAllRoomDetails,
-    getTableMulitiSearch,
-} from "../../../services/roomDetail/roomDetailServices";
+import AddFood from "./AddFood";
+import EditFood from "./EditFood";
 
-function Room() {
+function Food() {
     const [addVisible, setAddVisible] = useState(false);
     const [searchText, setSearchText] = useState();
     const [editVisible, setEditVisible] = useState(false);
     const [editData, setEditData] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState("");
-    const [roomDetails, setRoomDetails] = useState();
+    const [foodDetails, setFoodDetails] = useState();
     const [total, setTotal] = useState(0);
 
     const [searchUrl, setSearchUrl] = useState({
-        roomType: "",
+        foodName: "",
     });
     const searchInput = useRef();
     useEffect(() => {
-        getRoomDetails();
+        getFoodDetails();
     }, []);
 
     const cancel = (e) => {};
 
-    const getRoomDetails = () => {
+    const getFoodDetails = () => {
         let total = 0;
-        getAllRoomDetails()
+        getAllFood()
             .then((data) => {
                 console.log(data);
-                setRoomDetails(data);
+                setFoodDetails(data);
                 data.map((tot) => {
-                    total = tot.period * tot.costPerDay + total;
+                    total = total + tot.price * tot.quantity;
                 });
                 setTotal(total);
             })
@@ -58,7 +58,7 @@ function Room() {
         setSearchedColumn(dataIndex);
         let updateUrl = {
             id: dataIndex === "id" ? value : searchUrl.id,
-            roomType: dataIndex === "roomType" ? value : searchUrl.roomType,
+            foodName: dataIndex === "foodName" ? value : searchUrl.foodName,
         };
         setSearchUrl(updateUrl);
         searchApi(updateUrl);
@@ -66,8 +66,8 @@ function Room() {
 
     const searchApi = (updateUrl) => {
         let searchName = convertSearchUrl(updateUrl);
-        getTableMulitiSearch("roomdetailsearch", searchName).then((data) => {
-            setRoomDetails(data);
+        getTableMulitiSearch("foodsearch", searchName).then((data) => {
+            setFoodDetails(data);
         });
     };
 
@@ -82,7 +82,7 @@ function Room() {
         clearFilters();
         let updateUrl = {
             id: dataIndex === "id" ? "" : searchUrl.id,
-            roomType: dataIndex === "roomType" ? "" : searchUrl.roomType,
+            foodName: dataIndex === "foodName" ? "" : searchUrl.foodName,
         };
         setSearchUrl(updateUrl);
         searchApi(updateUrl);
@@ -105,8 +105,8 @@ function Room() {
                                 ref={searchInput}
                                 width="100%"
                                 placeholder={
-                                    dataIndex === "roomType"
-                                        ? "Search roomType"
+                                    dataIndex === "foodName"
+                                        ? "Search foodName"
                                         : ""
                                 }
                                 value={searchUrl[dataIndex]}
@@ -182,11 +182,11 @@ function Room() {
 
     const confirmDelete = (id) => {
         console.log("id is :" + id);
-        deleteRoomDetailsById(id).then(
+        deleteFoodById(id).then(
             (res) => {
                 console.log(res);
-                getRoomDetails();
-                RoomDeleteSuccess();
+                getFoodDetails();
+                foodDeleteSuccess();
             },
             (error) => {
                 console.log(error);
@@ -206,7 +206,7 @@ function Room() {
         setEditVisible(true);
     };
 
-    const showAddRoom = () => {
+    const showAddFood = () => {
         setAddVisible(true);
     };
 
@@ -218,43 +218,27 @@ function Room() {
     };
     const columns = [
         {
-            title: "Room Type",
-            dataIndex: "roomType",
-            key: "roomType",
-            ...getColumnSearchProps("roomType"),
-        },
-
-        {
-            title: "Customer No",
-            dataIndex: "customerNo",
-            key: "customerNo",
+            title: "Food Name",
+            dataIndex: "foodName",
+            key: "foodName",
+            ...getColumnSearchProps("foodName"),
         },
         {
-            title: "Facilities",
-            dataIndex: "facilities",
-            key: "facilities",
+            title: "Price",
+            dataIndex: "price",
+            key: "price",
         },
         {
-            title: "Room No",
-            dataIndex: "roomNo",
-            key: "roomNo",
-        },
-        {
-            title: "Period",
-            dataIndex: "period",
-            key: "period",
-        },
-        {
-            title: "Cost Per Day",
-            dataIndex: "costPerDay",
-            key: "costPerDay",
+            title: "Quantity",
+            dataIndex: "quantity",
+            key: "quantity",
         },
         {
             title: "Action",
             dataIndex: "action",
             key: "action",
             align: "center",
-            render: (text, record = roomDetails) => (
+            render: (text, record = foodDetails) => (
                 <span key={record.id}>
                     <EditOutlined
                         style={{ fontSize: "18px", color: "blue" }}
@@ -294,23 +278,23 @@ function Room() {
                     <Button
                         icon={<PlusOutlined />}
                         type="primary"
-                        onClick={() => showAddRoom()}
+                        onClick={() => showAddFood()}
                         style={{ marginLeft: 950 }}
                     >
                         Add
                     </Button>
-                    <CustomTable columns={columns} dataSource={roomDetails} />
+                    <CustomTable columns={columns} dataSource={foodDetails} />
                     {addVisible ? (
-                        <AddRoom
-                            getRoomDetails={getRoomDetails}
+                        <AddFood
+                            getFoodDetails={getFoodDetails}
                             setAddVisible={setAddVisible}
                             visible={addVisible}
                             handleOk={handleAddOk}
                             handleCancel={handleAddCancel}
                         />
                     ) : editVisible ? (
-                        <EditRoom
-                            getRoomDetails={getRoomDetails}
+                        <EditFood
+                            getFoodDetails={getFoodDetails}
                             setEditVisible={setEditVisible}
                             editData={editData}
                             visible={editVisible}
@@ -322,9 +306,9 @@ function Room() {
                     )}
                 </CustomCard>
             </div>
-            <div>Total Cost {total}</div>
+            <div>Total Price :{total} </div>
         </>
     );
 }
 
-export default Room;
+export default Food;

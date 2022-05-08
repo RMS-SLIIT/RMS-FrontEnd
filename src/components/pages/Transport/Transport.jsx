@@ -7,47 +7,50 @@ import {
 } from "@ant-design/icons";
 import { Button, Divider, Popconfirm, Col, Row, Input } from "antd";
 import React, { useEffect, useState, useRef } from "react";
-import { convertSearchUrl } from "../../../helper/helper";
-import { RoomDeleteSuccess } from "../../../helper/helper";
+import {
+    convertSearchUrl,
+    transportDeleteSuccess,
+} from "../../../helper/helper";
+import { inventoryDeleteSuccess } from "../../../helper/helper";
+import {
+    getTableMulitiSearch,
+    deleteTransportById,
+    getAllTransport,
+} from "../../../services/Transport/transportServices";
 import Highlighter from "react-highlight-words";
 import { deleteConfirmMsg } from "../../../utils/messages";
 import CustomCard from "../../atoms/CustomCard/CustomCard";
 import CustomTable from "../../atoms/Table/CustomTable";
-import AddRoom from "./AddRoom";
-import EditRoom from "./EditRoom";
-import {
-    deleteRoomDetailsById,
-    getAllRoomDetails,
-    getTableMulitiSearch,
-} from "../../../services/roomDetail/roomDetailServices";
+import AddTransport from "./AddTransport";
+import EditTransport from "./EditTransport";
 
-function Room() {
+function Transport() {
     const [addVisible, setAddVisible] = useState(false);
     const [searchText, setSearchText] = useState();
     const [editVisible, setEditVisible] = useState(false);
     const [editData, setEditData] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState("");
-    const [roomDetails, setRoomDetails] = useState();
+    const [transportDetails, setTransportDetails] = useState();
     const [total, setTotal] = useState(0);
 
     const [searchUrl, setSearchUrl] = useState({
-        roomType: "",
+        vehicleType: "",
     });
     const searchInput = useRef();
     useEffect(() => {
-        getRoomDetails();
+        getTransportDetails();
     }, []);
 
     const cancel = (e) => {};
 
-    const getRoomDetails = () => {
+    const getTransportDetails = () => {
         let total = 0;
-        getAllRoomDetails()
+        getAllTransport()
             .then((data) => {
                 console.log(data);
-                setRoomDetails(data);
+                setTransportDetails(data);
                 data.map((tot) => {
-                    total = tot.period * tot.costPerDay + total;
+                    total = tot.cost + total;
                 });
                 setTotal(total);
             })
@@ -58,7 +61,8 @@ function Room() {
         setSearchedColumn(dataIndex);
         let updateUrl = {
             id: dataIndex === "id" ? value : searchUrl.id,
-            roomType: dataIndex === "roomType" ? value : searchUrl.roomType,
+            vehicleType:
+                dataIndex === "vehicleType" ? value : searchUrl.vehicleType,
         };
         setSearchUrl(updateUrl);
         searchApi(updateUrl);
@@ -66,8 +70,8 @@ function Room() {
 
     const searchApi = (updateUrl) => {
         let searchName = convertSearchUrl(updateUrl);
-        getTableMulitiSearch("roomdetailsearch", searchName).then((data) => {
-            setRoomDetails(data);
+        getTableMulitiSearch("transportsearch", searchName).then((data) => {
+            setTransportDetails(data);
         });
     };
 
@@ -82,7 +86,8 @@ function Room() {
         clearFilters();
         let updateUrl = {
             id: dataIndex === "id" ? "" : searchUrl.id,
-            roomType: dataIndex === "roomType" ? "" : searchUrl.roomType,
+            vehicleType:
+                dataIndex === "vehicleType" ? "" : searchUrl.vehicleType,
         };
         setSearchUrl(updateUrl);
         searchApi(updateUrl);
@@ -105,8 +110,8 @@ function Room() {
                                 ref={searchInput}
                                 width="100%"
                                 placeholder={
-                                    dataIndex === "roomType"
-                                        ? "Search roomType"
+                                    dataIndex === "vehicleType"
+                                        ? "Search vehicleType"
                                         : ""
                                 }
                                 value={searchUrl[dataIndex]}
@@ -182,11 +187,11 @@ function Room() {
 
     const confirmDelete = (id) => {
         console.log("id is :" + id);
-        deleteRoomDetailsById(id).then(
+        deleteTransportById(id).then(
             (res) => {
                 console.log(res);
-                getRoomDetails();
-                RoomDeleteSuccess();
+                getTransportDetails();
+                transportDeleteSuccess();
             },
             (error) => {
                 console.log(error);
@@ -206,7 +211,7 @@ function Room() {
         setEditVisible(true);
     };
 
-    const showAddRoom = () => {
+    const showAddTransport = () => {
         setAddVisible(true);
     };
 
@@ -218,43 +223,33 @@ function Room() {
     };
     const columns = [
         {
-            title: "Room Type",
-            dataIndex: "roomType",
-            key: "roomType",
-            ...getColumnSearchProps("roomType"),
+            title: "Vehicle Type",
+            dataIndex: "vehicleType",
+            key: "vehicleType",
+            ...getColumnSearchProps("vehicleType"),
         },
 
         {
-            title: "Customer No",
-            dataIndex: "customerNo",
-            key: "customerNo",
+            title: "Vehicle Name",
+            dataIndex: "vehicleName",
+            key: "vehicleName",
         },
         {
-            title: "Facilities",
-            dataIndex: "facilities",
-            key: "facilities",
+            title: "Cost",
+            dataIndex: "cost",
+            key: "cost",
         },
         {
-            title: "Room No",
-            dataIndex: "roomNo",
-            key: "roomNo",
-        },
-        {
-            title: "Period",
-            dataIndex: "period",
-            key: "period",
-        },
-        {
-            title: "Cost Per Day",
-            dataIndex: "costPerDay",
-            key: "costPerDay",
+            title: "Vehicle Facilities",
+            dataIndex: "vehiclefacilities",
+            key: "vehiclefacilities",
         },
         {
             title: "Action",
             dataIndex: "action",
             key: "action",
             align: "center",
-            render: (text, record = roomDetails) => (
+            render: (text, record = transportDetails) => (
                 <span key={record.id}>
                     <EditOutlined
                         style={{ fontSize: "18px", color: "blue" }}
@@ -294,23 +289,26 @@ function Room() {
                     <Button
                         icon={<PlusOutlined />}
                         type="primary"
-                        onClick={() => showAddRoom()}
+                        onClick={() => showAddTransport()}
                         style={{ marginLeft: 950 }}
                     >
                         Add
                     </Button>
-                    <CustomTable columns={columns} dataSource={roomDetails} />
+                    <CustomTable
+                        columns={columns}
+                        dataSource={transportDetails}
+                    />
                     {addVisible ? (
-                        <AddRoom
-                            getRoomDetails={getRoomDetails}
+                        <AddTransport
+                            getTransportDetails={getTransportDetails}
                             setAddVisible={setAddVisible}
                             visible={addVisible}
                             handleOk={handleAddOk}
                             handleCancel={handleAddCancel}
                         />
                     ) : editVisible ? (
-                        <EditRoom
-                            getRoomDetails={getRoomDetails}
+                        <EditTransport
+                            getTransportDetails={getTransportDetails}
                             setEditVisible={setEditVisible}
                             editData={editData}
                             visible={editVisible}
@@ -327,4 +325,4 @@ function Room() {
     );
 }
 
-export default Room;
+export default Transport;

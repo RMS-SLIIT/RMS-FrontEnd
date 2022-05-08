@@ -1,30 +1,8 @@
 import { api } from "../axiosServices";
 
-export const getAllEmployee = () => {
+export const getAllFood = () => {
     return new Promise((resolve, reject) => {
-        api("GET", "base", `/employee`, "", "", "")
-            .then((response) => {
-                resolve(response.data);
-            })
-            .catch((error) => {
-                reject(error);
-            });
-    });
-};
-export const addEmployee = (data) => {
-    return new Promise((resolve, reject) => {
-        api("POST", "base", "/employee", "", data, "")
-            .then((response) => {
-                resolve(response.data);
-            })
-            .catch((error) => {
-                reject(error);
-            });
-    });
-};
-export const deleteEmployeeByID = (id) => {
-    return new Promise((resolve, reject) => {
-        api("DELETE", "base", "/employee", "", "", id)
+        api("GET", "base", "/food", "", "", "")
             .then((response) => {
                 resolve(response.data);
             })
@@ -34,9 +12,45 @@ export const deleteEmployeeByID = (id) => {
     });
 };
 
-export const updateEmployee = (data) => {
+export const addFood = (data) => {
     return new Promise((resolve, reject) => {
-        api("PUT", "base", "/employee", "", data, "")
+        api("POST", "base", "/food", "", data, "")
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+};
+
+export const deleteFoodById = (id) => {
+    return new Promise((resolve, reject) => {
+        api("DELETE", "base", "/food", "", "", id)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+};
+
+export const getFoodById = (id) => {
+    return new Promise((resolve, reject) => {
+        api("GET", "base", `/food/${id}`, "", "", "")
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+};
+
+export const updateFood = (data) => {
+    return new Promise((resolve, reject) => {
+        api("PUT", "base", "/food", "", data, "")
             .then((response) => {
                 resolve(response.data);
             })

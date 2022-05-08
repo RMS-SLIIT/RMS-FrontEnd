@@ -1,30 +1,8 @@
 import { api } from "../axiosServices";
 
-export const getAllEmployee = () => {
+export const getAllTransport = () => {
     return new Promise((resolve, reject) => {
-        api("GET", "base", `/employee`, "", "", "")
-            .then((response) => {
-                resolve(response.data);
-            })
-            .catch((error) => {
-                reject(error);
-            });
-    });
-};
-export const addEmployee = (data) => {
-    return new Promise((resolve, reject) => {
-        api("POST", "base", "/employee", "", data, "")
-            .then((response) => {
-                resolve(response.data);
-            })
-            .catch((error) => {
-                reject(error);
-            });
-    });
-};
-export const deleteEmployeeByID = (id) => {
-    return new Promise((resolve, reject) => {
-        api("DELETE", "base", "/employee", "", "", id)
+        api("GET", "base", "/transport", "", "", "")
             .then((response) => {
                 resolve(response.data);
             })
@@ -34,9 +12,33 @@ export const deleteEmployeeByID = (id) => {
     });
 };
 
-export const updateEmployee = (data) => {
+export const addTransport = (data) => {
     return new Promise((resolve, reject) => {
-        api("PUT", "base", "/employee", "", data, "")
+        api("POST", "base", "/transport", "", data, "")
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+};
+
+export const deleteTransportById = (id) => {
+    return new Promise((resolve, reject) => {
+        api("DELETE", "base", "/transport", "", "", id)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+};
+
+export const updateTransport = (data) => {
+    return new Promise((resolve, reject) => {
+        api("PUT", "base", "/transport", "", data, "")
             .then((response) => {
                 resolve(response.data);
             })

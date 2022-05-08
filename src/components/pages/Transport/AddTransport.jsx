@@ -1,22 +1,15 @@
-import React, { useState } from "react";
-import { Form, Col, Row, DatePicker, InputNumber } from "antd";
+import React from "react";
+import { Form, Col, Row } from "antd";
 import Input from "../../atoms/Input/CustomInput";
 import Modal from "../../organism/Modal/CustomModal";
-import "./AddInventory.css";
-import {
-    noSplCharRegex,
-    onlyNumberRegex,
-    priceRegex,
-} from "../../../utils/regex";
-import { addInventoryDetails } from "../../../services/inventory/inventoryServices";
+import "./Transport.css";
+import { noSplCharRegex, priceRegex } from "../../../utils/regex";
+import { addTransport } from "../../../services/Transport/transportServices";
 import { Notification } from "../../../helper/helper";
 
-const AddInventory = (props) => {
-    const [supplierDisappliedDate, setSupplierDisappliedDate] = useState();
-    const dateFormat = "YYYY-MM-DD";
-
+const AddTransport = (props) => {
     const {
-        getInventoryDetails,
+        getTransportDetails,
         viewData,
         setAddVisible,
         visible,
@@ -31,13 +24,13 @@ const AddInventory = (props) => {
 
     const onFinish = (values) => {
         console.log("Success:", values);
-        addInventoryDetails(values)
+        addTransport(values)
             .then((res) => {
                 console.log(res);
-                Notification("New Inventory Detail Added");
+                Notification("New Transport Detail Added");
 
                 setAddVisible(false);
-                getInventoryDetails();
+                getTransportDetails();
             })
             .catch((err) => {
                 console.log(err);
@@ -50,17 +43,9 @@ const AddInventory = (props) => {
         console.log("Failed:", errorInfo);
     };
 
-    const dateOnChange = (value, dateString) => {
-        setSupplierDisappliedDate(dateString);
-    };
-
-    function onChangeQty(value) {
-        console.log("changed", value);
-    }
-
     return (
         <Modal
-            title="New Inventory Detail"
+            title="New Transport Detail"
             width="900px"
             action="form"
             visibleModal={show}
@@ -73,7 +58,7 @@ const AddInventory = (props) => {
                     form={form}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
-                    className="addInventory"
+                    className="addTransport"
                     initialValues={{ remember: true }}
                 >
                     <Row>
@@ -86,16 +71,15 @@ const AddInventory = (props) => {
                                         message:
                                             "Sorry you are exceeding the limit!",
                                     },
-
                                     {
                                         pattern: new RegExp(noSplCharRegex),
-                                        message: "Enter valid Name",
+                                        message: "Enter valid VehicleType",
                                     },
                                 ]}
-                                label="Supplier Name :  "
-                                name="supplierName"
+                                label="Vehicle Type :  "
+                                name="vehicleType"
                             >
-                                <Input placeholder="Supplier Name" />
+                                <Input placeholder="Vehicle Type" />
                             </Form.Item>
                         </Col>
                         <Col span={12} style={{ padding: "5px" }}>
@@ -107,18 +91,10 @@ const AddInventory = (props) => {
                                             "Select Supplier Disaplied Date",
                                     },
                                 ]}
-                                label="Supplier Disaplied Date :  "
-                                name="supplierDisappliedDate"
+                                label="Vehicle Name :  "
+                                name="vehicleName"
                             >
-                                <DatePicker
-                                    allowClear={true}
-                                    onChange={dateOnChange}
-                                    placeholder="Supplier Disaplied Date"
-                                    showNow={true}
-                                    disabledTime={true}
-                                    format={dateFormat}
-                                    inputReadOnly={true}
-                                />
+                                <Input placeholder="Vehicle Name" />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -137,10 +113,10 @@ const AddInventory = (props) => {
                                             "Enter valid Price Ex: 1000.00",
                                     },
                                 ]}
-                                label="Price :  "
-                                name="price"
+                                label="cost :  "
+                                name="cost"
                             >
-                                <Input placeholder="Price" />
+                                <Input placeholder="cost" />
                             </Form.Item>
                         </Col>
                         <Col span={12} style={{ padding: "5px" }}>
@@ -148,15 +124,20 @@ const AddInventory = (props) => {
                                 className="formItem"
                                 rules={[
                                     {
-                                        pattern: new RegExp(onlyNumberRegex),
+                                        max: 30,
                                         message:
-                                            "Enter valid Price (only Numbers)",
+                                            "Sorry you are exceeding the limit!",
+                                    },
+                                    {
+                                        pattern: new RegExp(noSplCharRegex),
+                                        message:
+                                            "Enter valid Vehicle Facilities",
                                     },
                                 ]}
-                                label="Quantity :  "
-                                name="quantity"
+                                label="Vehicle Facilities :  "
+                                name="vehiclefacilities"
                             >
-                                <Input placeholder="Quantity" />
+                                <Input placeholder="Vehicle Facilities" />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -166,4 +147,4 @@ const AddInventory = (props) => {
     );
 };
 
-export default AddInventory;
+export default AddTransport;
