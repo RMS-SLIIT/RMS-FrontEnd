@@ -97,29 +97,6 @@ function EditInventory(props) {
                                 <Input placeholder="Guest Name" />
                             </Form.Item>
                         </Col>
-                        {/* <Col span={12} style={{ padding: "5px" }}>
-                            <Form.Item
-                                rules={[
-                                    {
-                                        required: true,
-                                        message:
-                                            "Select Supplier Disaplied Date",
-                                    },
-                                ]}
-                                label="Supplier Disaplied Date :  "
-                                name="supplierDisappliedDate"
-                            >
-                                <DatePicker
-                                    allowClear={true}
-                                    onChange={dateOnChange}
-                                    placeholder="Supplier Disaplied Date"
-                                    showNow={true}
-                                    disabledTime={true}
-                                    format={dateFormat}
-                                    inputReadOnly={true}
-                                />
-                            </Form.Item>
-                        </Col> */}
                     </Row>
                     <Row>
                         <Col span={12} style={{ padding: "5px" }}>
