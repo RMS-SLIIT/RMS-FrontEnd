@@ -3,15 +3,18 @@ import {
     EditOutlined,
     PlusOutlined,
     QuestionCircleOutlined,
+    SearchOutlined,
 } from "@ant-design/icons";
-import { Button, Divider, Popconfirm } from "antd";
-import React, { useEffect, useState } from "react";
-import { banquetDeleteSuccess } from "../../../helper/helper";
+import { Button, Col, Divider, Input, Popconfirm, Row } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { banquetDeleteSuccess, convertSearchUrl } from "../../../helper/helper";
 import {
     deleteBanquetDetailsById,
     getAllBanquetDetails,
+    getTableMulitiSearch,
 } from "../../../services/banquet/banquetServices";
 import { deleteConfirmMsg } from "../../../utils/messages";
+import Highlighter from "react-highlight-words";
 import CustomCard from "../../atoms/CustomCard/CustomCard";
 import CustomTable from "../../atoms/Table/CustomTable";
 import AddBanquet from "./AddBanquet";
@@ -22,6 +25,13 @@ function Banquet() {
     const [banquetDetails, setBanquetDetails] = useState();
     const [editVisible, setEditVisible] = useState(false);
     const [editData, setEditData] = useState([]);
+    const [searchText, setSearchText] = useState();
+    const [searchedColumn, setSearchedColumn] = useState("");
+
+    const [searchUrl, setSearchUrl] = useState({
+        guestName: "",
+    });
+    const searchInput = useRef();
 
     useEffect(() => {
         getBanquetDetails();
@@ -38,6 +48,132 @@ function Banquet() {
             .catch((err) => {});
     };
 
+    const onChangeSearch = (e, dataIndex) => {
+        const { value } = e.target;
+        setSearchedColumn(dataIndex);
+        let updateUrl = {
+            id: dataIndex === "id" ? value : searchUrl.id,
+            guestName: dataIndex === "guestName" ? value : searchUrl.guestName,
+        };
+        setSearchUrl(updateUrl);
+        searchApi(updateUrl);
+    };
+
+    const searchApi = (updateUrl) => {
+        let searchName = convertSearchUrl(updateUrl);
+        getTableMulitiSearch("banquetsearch", searchName).then((data) => {
+            setBanquetDetails(data);
+        });
+    };
+
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        searchApi(searchUrl);
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+
+    const handleReset = (clearFilters, dataIndex) => {
+        clearFilters();
+        let updateUrl = {
+            id: dataIndex === "id" ? "" : searchUrl.id,
+            guestName: dataIndex === "nic" ? "" : searchUrl.guestName,
+        };
+        setSearchUrl(updateUrl);
+        searchApi(updateUrl);
+        setSearchText("");
+    };
+
+    const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({
+            setSelectedKeys,
+            selectedKeys,
+            confirm,
+            clearFilters,
+        }) => (
+            <div className="tabel-search-popup">
+                <Row gutter={10} className="tabel-search-popup-row-one">
+                    <Col span={24}>
+                        {
+                            <Input
+                                tableSearch
+                                ref={searchInput}
+                                width="100%"
+                                placeholder={
+                                    dataIndex === "guestName"
+                                        ? "Search Quest Name"
+                                        : ""
+                                }
+                                value={searchUrl[dataIndex]}
+                                onChange={(e) => onChangeSearch(e, dataIndex)}
+                                onPressEnter={() =>
+                                    handleSearch(
+                                        selectedKeys,
+                                        confirm,
+                                        dataIndex
+                                    )
+                                }
+                            />
+                        }
+                    </Col>
+                </Row>
+                <Row gutter={10}>
+                    <Col span={12}>
+                        <Button
+                            tableSearch
+                            type="primary"
+                            onClick={() =>
+                                handleSearch(selectedKeys, confirm, dataIndex)
+                            }
+                            icon={<SearchOutlined />}
+                            size="small"
+                        >
+                            Search
+                        </Button>
+                    </Col>
+                    <Col span={12}>
+                        {" "}
+                        <Button
+                            tableSearch
+                            onClick={() => handleReset(clearFilters, dataIndex)}
+                            size="small"
+                        >
+                            Reset
+                        </Button>
+                    </Col>
+                </Row>
+            </div>
+        ),
+        filterIcon: (filtered) => (
+            <SearchOutlined
+                style={{
+                    color:
+                        searchUrl[dataIndex] && searchUrl[dataIndex].length > 0
+                            ? "#1890ff"
+                            : undefined,
+                }}
+            />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]
+                ? record[dataIndex]
+                      .toString()
+                      .toLowerCase()
+                      .includes(value.toLowerCase())
+                : "",
+
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+                    searchWords={[searchUrl[dataIndex]]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ""}
+                />
+            ) : (
+                text
+            ),
+    });
     const confirmDelete = (id) => {
         console.log("id is :" + id);
         deleteBanquetDetailsById(id).then(
@@ -79,6 +215,7 @@ function Banquet() {
             title: "Guest Name",
             dataIndex: "guestName",
             key: "guestName",
+            ...getColumnSearchProps("guestName"),
         },
         {
             title: "Mobile No",
