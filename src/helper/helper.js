@@ -108,6 +108,25 @@ export const roomBokingUpdateSuccess = () =>
         duration: 3,
     });
 
+// transport
+export const transportAddSuccess = () =>
+    notification.success({
+        message: "Transport successfully added",
+        duration: 3,
+    });
+
+export const transportDeleteSuccess = () =>
+    notification.success({
+        message: "Transport  detail successfully deleted",
+        duration: 3,
+    });
+
+export const transportUpdateSuccess = () =>
+    notification.success({
+        message: "Transport  detail successfully Updated",
+        duration: 3,
+    });
+
 //convert search url
 export const convertSearchUrl = (updateUrl) => {
     console.log(updateUrl);
