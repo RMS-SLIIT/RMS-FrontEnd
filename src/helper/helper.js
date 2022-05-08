@@ -127,6 +127,25 @@ export const transportUpdateSuccess = () =>
         duration: 3,
     });
 
+// food
+export const foodAddSuccess = () =>
+    notification.success({
+        message: "Food successfully added",
+        duration: 3,
+    });
+
+export const foodDeleteSuccess = () =>
+    notification.success({
+        message: "Food  detail successfully deleted",
+        duration: 3,
+    });
+
+export const foodUpdateSuccess = () =>
+    notification.success({
+        message: "Food  detail successfully Updated",
+        duration: 3,
+    });
+
 //convert search url
 export const convertSearchUrl = (updateUrl) => {
     console.log(updateUrl);
@@ -135,7 +154,7 @@ export const convertSearchUrl = (updateUrl) => {
     let url = [];
     for (let i = 0; i < fields.length; i++) {
         url.push(
-            `${fields[i]}=${fieldValues[i] == undefined ? "" : fieldValues[i]}` //sarath
+            `${fields[i]}=${fieldValues[i] === undefined ? "" : fieldValues[i]}` //sarath
         );
     }
     let searchUrl = url.join("&");
