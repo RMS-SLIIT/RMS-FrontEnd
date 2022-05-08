@@ -5,55 +5,55 @@ import {
     QuestionCircleOutlined,
     SearchOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Divider, Input, Popconfirm, Row } from "antd";
-import React, { useEffect, useRef, useState } from "react";
-import { banquetDeleteSuccess, convertSearchUrl } from "../../../helper/helper";
+import { Button, Divider, Popconfirm, Col, Row, Input } from "antd";
+import React, { useEffect, useState, useRef } from "react";
+import { convertSearchUrl } from "../../../helper/helper";
+import { inventoryDeleteSuccess } from "../../../helper/helper";
 import {
-    deleteBanquetDetailsById,
-    getAllBanquetDetails,
     getTableMulitiSearch,
-} from "../../../services/banquet/banquetServices";
-import { deleteConfirmMsg } from "../../../utils/messages";
+    deleteInventoryDetailsById,
+    getAllInventoryDetails,
+} from "../../../services/inventory/inventoryServices";
 import Highlighter from "react-highlight-words";
+import { deleteConfirmMsg } from "../../../utils/messages";
 import CustomCard from "../../atoms/CustomCard/CustomCard";
 import CustomTable from "../../atoms/Table/CustomTable";
-import AddBanquet from "./AddBanquet";
-import EditBanquet from "./EditBanquet";
+import AddInventory from "./AddInventory";
+import EditInventory from "./EditInventory";
 
-function Banquet() {
+function Inventory() {
     const [addVisible, setAddVisible] = useState(false);
-    const [banquetDetails, setBanquetDetails] = useState();
+    const [searchText, setSearchText] = useState();
     const [editVisible, setEditVisible] = useState(false);
     const [editData, setEditData] = useState([]);
-    const [searchText, setSearchText] = useState();
     const [searchedColumn, setSearchedColumn] = useState("");
+    const [inventoryDetails, setInventoryDetails] = useState();
 
     const [searchUrl, setSearchUrl] = useState({
-        guestName: "",
+        supplierName: "",
     });
     const searchInput = useRef();
-
     useEffect(() => {
-        getBanquetDetails();
+        getInventoryDetails();
     }, []);
 
     const cancel = (e) => {};
 
-    const getBanquetDetails = () => {
-        getAllBanquetDetails()
+    const getInventoryDetails = () => {
+        getAllInventoryDetails()
             .then((data) => {
                 console.log(data);
-                setBanquetDetails(data);
+                setInventoryDetails(data);
             })
             .catch((err) => {});
     };
-
     const onChangeSearch = (e, dataIndex) => {
         const { value } = e.target;
         setSearchedColumn(dataIndex);
         let updateUrl = {
             id: dataIndex === "id" ? value : searchUrl.id,
-            guestName: dataIndex === "guestName" ? value : searchUrl.guestName,
+            supplierName:
+                dataIndex === "supplierName" ? value : searchUrl.supplierName,
         };
         setSearchUrl(updateUrl);
         searchApi(updateUrl);
@@ -61,8 +61,8 @@ function Banquet() {
 
     const searchApi = (updateUrl) => {
         let searchName = convertSearchUrl(updateUrl);
-        getTableMulitiSearch("banquetsearch", searchName).then((data) => {
-            setBanquetDetails(data);
+        getTableMulitiSearch("inventorysearch", searchName).then((data) => {
+            setInventoryDetails(data);
         });
     };
 
@@ -77,7 +77,8 @@ function Banquet() {
         clearFilters();
         let updateUrl = {
             id: dataIndex === "id" ? "" : searchUrl.id,
-            guestName: dataIndex === "nic" ? "" : searchUrl.guestName,
+            supplierName:
+                dataIndex === "supplierName" ? "" : searchUrl.supplierName,
         };
         setSearchUrl(updateUrl);
         searchApi(updateUrl);
@@ -100,8 +101,8 @@ function Banquet() {
                                 ref={searchInput}
                                 width="100%"
                                 placeholder={
-                                    dataIndex === "guestName"
-                                        ? "Search Quest Name"
+                                    dataIndex === "supplierName"
+                                        ? "Search supplierName"
                                         : ""
                                 }
                                 value={searchUrl[dataIndex]}
@@ -174,13 +175,14 @@ function Banquet() {
                 text
             ),
     });
+
     const confirmDelete = (id) => {
         console.log("id is :" + id);
-        deleteBanquetDetailsById(id).then(
+        deleteInventoryDetailsById(id).then(
             (res) => {
                 console.log(res);
-                getBanquetDetails();
-                banquetDeleteSuccess();
+                getInventoryDetails();
+                inventoryDeleteSuccess();
             },
             (error) => {
                 console.log(error);
@@ -200,7 +202,7 @@ function Banquet() {
         setEditVisible(true);
     };
 
-    const showAddBanquet = () => {
+    const showAddInventory = () => {
         setAddVisible(true);
     };
 
@@ -212,42 +214,33 @@ function Banquet() {
     };
     const columns = [
         {
-            title: "Guest Name",
-            dataIndex: "guestName",
-            key: "guestName",
-            ...getColumnSearchProps("guestName"),
+            title: "Supplier Name",
+            dataIndex: "supplierName",
+            key: "supplierName",
+            ...getColumnSearchProps("supplierName"),
+        },
+
+        {
+            title: "Supplier Disapplied Date",
+            dataIndex: "supplierDisappliedDate",
+            key: "supplierDisappliedDate",
         },
         {
-            title: "Mobile No",
-            dataIndex: "mobileNumber",
-            key: "mobileNumber",
+            title: "Price",
+            dataIndex: "price",
+            key: "price",
         },
         {
-            title: "Event Type",
-            dataIndex: "eventType",
-            key: "eventType",
-        },
-        {
-            title: "Additional Service",
-            dataIndex: "additionalService",
-            key: "additionalService",
-        },
-        {
-            title: "Decorations",
-            dataIndex: "decoration",
-            key: "decoration",
-        },
-        {
-            title: "Date Of Event",
-            dataIndex: "dateOfEvent",
-            key: "dateOfEvent",
+            title: "Quantity",
+            dataIndex: "quantity",
+            key: "quantity",
         },
         {
             title: "Action",
             dataIndex: "action",
             key: "action",
             align: "center",
-            render: (text, record = banquetDetails) => (
+            render: (text, record = inventoryDetails) => (
                 <span key={record.id}>
                     <EditOutlined
                         style={{ fontSize: "18px", color: "blue" }}
@@ -286,23 +279,23 @@ function Banquet() {
                 <Button
                     icon={<PlusOutlined />}
                     type="primary"
-                    onClick={() => showAddBanquet()}
+                    onClick={() => showAddInventory()}
                     style={{ marginLeft: 950 }}
                 >
                     Add
                 </Button>
-                <CustomTable columns={columns} dataSource={banquetDetails} />
+                <CustomTable columns={columns} dataSource={inventoryDetails} />
                 {addVisible ? (
-                    <AddBanquet
-                        getBanquetDetails={getBanquetDetails}
+                    <AddInventory
+                        getInventoryDetails={getInventoryDetails}
                         setAddVisible={setAddVisible}
                         visible={addVisible}
                         handleOk={handleAddOk}
                         handleCancel={handleAddCancel}
                     />
                 ) : editVisible ? (
-                    <EditBanquet
-                        getBanquetDetails={getBanquetDetails}
+                    <EditInventory
+                        getInventoryDetails={getInventoryDetails}
                         setEditVisible={setEditVisible}
                         editData={editData}
                         visible={editVisible}
@@ -317,4 +310,4 @@ function Banquet() {
     );
 }
 
-export default Banquet;
+export default Inventory;

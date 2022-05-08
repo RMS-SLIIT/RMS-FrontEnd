@@ -2,57 +2,54 @@ import React, { useState } from "react";
 import { Form, Col, Row, DatePicker } from "antd";
 import Input from "../../atoms/Input/CustomInput";
 import Modal from "../../organism/Modal/CustomModal";
-import "./AddBanquet.css";
-import { noSplCharRegex, phoneNumberRegex } from "../../../utils/regex";
-import { addBanquetDetails } from "../../../services/banquet/banquetServices";
-import { Notification } from "../../../helper/helper";
+import "./AddRoom.css";
+import {
+    noSplCharRegex,
+    onlyNumberRegex,
+    phoneNumberRegex,
+    priceRegex,
+} from "../../../utils/regex";
+import { updateRoomDetail } from "../../../services/roomDetail/roomDetailServices";
+import { RoomUpdateSuccess } from "../../../helper/helper";
 
-const AddBanquet = (props) => {
-    const [dateOfEvent, setDateOfEvent] = useState();
-    const dateFormat = "YYYY-MM-DD";
-
+function EditRoom(props) {
     const {
-        getBanquetDetails,
-        viewData,
-        setAddVisible,
+        editData,
+        setEditVisible,
         visible,
         handleOk,
         handleCancel,
+        getRoomDetails,
     } = props;
-
     const [form] = Form.useForm();
-
     let show = visible;
-    form.setFieldsValue(viewData && viewData);
+
+    form.setFieldsValue(editData && editData);
 
     const onFinish = (values) => {
         console.log("Success:", values);
-        addBanquetDetails(values)
+        updateRoomDetail(values)
             .then((res) => {
                 console.log(res);
-                Notification("New Banquet Detail Added");
 
-                setAddVisible(false);
-                getBanquetDetails();
+                form.resetFields();
+                RoomUpdateSuccess();
+
+                getRoomDetails();
+                setEditVisible(false);
             })
             .catch((err) => {
                 console.log(err);
             });
-
-        form.resetFields();
     };
 
     const onFinishFailed = (errorInfo) => {
         console.log("Failed:", errorInfo);
     };
 
-    const dateOnChange = (value, dateString) => {
-        setDateOfEvent(dateString);
-    };
-
     return (
         <Modal
-            title="New Banquet"
+            title="Edit Room Detail"
             width="900px"
             action="form"
             visibleModal={show}
@@ -65,9 +62,61 @@ const AddBanquet = (props) => {
                     form={form}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
-                    className="addBanquet"
+                    className="addRoom"
                     initialValues={{ remember: true }}
                 >
+                    <Row>
+                        <Col span={12} style={{ padding: "5px" }}>
+                            <Form.Item label="Room ID" hidden={true} name="id">
+                                <Input
+                                    disabled={true}
+                                    style={{ width: "70%" }}
+                                    placeholder="Room Id"
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                className="formItem"
+                                rules={[
+                                    {
+                                        max: 30,
+                                        message:
+                                            "Sorry you are exceeding the limit!",
+                                    },
+
+                                    {
+                                        pattern: new RegExp(noSplCharRegex),
+                                        message: "Enter valid Name",
+                                    },
+                                ]}
+                                label="Room Type :  "
+                                name="roomType"
+                            >
+                                <Input placeholder="Room Type" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12} style={{ padding: "5px" }}>
+                            <Form.Item
+                                className="formItem"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message:
+                                            "Customer Number can't be empty",
+                                    },
+
+                                    {
+                                        pattern: new RegExp(phoneNumberRegex),
+                                        message:
+                                            "Enter valid Number Ex: 07xxxxxxxx",
+                                    },
+                                ]}
+                                label="Customer No :  "
+                                name="customerNo"
+                            >
+                                <Input placeholder="Customer No" />
+                            </Form.Item>
+                        </Col>
+                    </Row>
                     <Row>
                         <Col span={12} style={{ padding: "5px" }}>
                             <Form.Item
@@ -84,104 +133,72 @@ const AddBanquet = (props) => {
                                         message: "Enter valid Name",
                                     },
                                 ]}
-                                label="Guest Name :  "
-                                name="guestName"
+                                label="Facilities :  "
+                                name="facilities"
                             >
-                                <Input placeholder="Guest Name" />
+                                <Input placeholder="Facilities" />
                             </Form.Item>
                         </Col>
                         <Col span={12} style={{ padding: "5px" }}>
                             <Form.Item
                                 className="formItem"
-                                rules={[
-                                    {
-                                        pattern: new RegExp(phoneNumberRegex),
-                                        message: "Enter valid Mobile Number",
-                                    },
-                                ]}
-                                label="Mobile Number :  "
-                                name="mobileNumber"
-                            >
-                                <Input placeholder="07x xxxx xxx" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12} style={{ padding: "5px" }}>
-                            <Form.Item
-                                className="formItem"
-                                rules={[
-                                    {
-                                        max: 30,
-                                        message:
-                                            "Sorry you are exceeding the limit!",
-                                    },
-
-                                    {
-                                        pattern: new RegExp(noSplCharRegex),
-                                        message: "Enter valid Event Type",
-                                    },
-                                ]}
-                                label="Event Type :  "
-                                name="eventType"
-                            >
-                                <Input placeholder="Event Type" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12} style={{ padding: "5px" }}>
-                            <Form.Item
-                                className="formItem"
-                                rules={[
-                                    {
-                                        max: 100,
-                                        message:
-                                            "Sorry you are exceeding the limit!",
-                                    },
-                                ]}
-                                label="Additional Service :  "
-                                name="additionalService"
-                            >
-                                <Input placeholder="Additional Service" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12} style={{ padding: "5px" }}>
-                            <Form.Item
-                                className="formItem"
-                                rules={[
-                                    {
-                                        max: 30,
-                                        message:
-                                            "Sorry you are exceeding the limit!",
-                                    },
-                                ]}
-                                label="Decorations :  "
-                                name="decoration"
-                            >
-                                <Input placeholder="Decorations" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12} style={{ padding: "5px" }}>
-                            <Form.Item
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Select date Of the Event",
+                                        message: "Room Number can't be empty",
+                                    },
+                                    {
+                                        pattern: new RegExp(onlyNumberRegex),
+                                        message:
+                                            "Enter valid Number (only Numbers)",
                                     },
                                 ]}
-                                label="Event Date :  "
-                                name="dateOfEvent"
+                                label="Room No :  "
+                                name="roomNo"
                             >
-                                <DatePicker
-                                    allowClear={true}
-                                    onChange={dateOnChange}
-                                    placeholder="Event Date"
-                                    showNow={true}
-                                    disabledTime={true}
-                                    format={dateFormat}
-                                    inputReadOnly={true}
-                                />
+                                <Input placeholder="Room No" />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={12} style={{ padding: "5px" }}>
+                            <Form.Item
+                                className="formItem"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Room Number can't be empty",
+                                    },
+                                    {
+                                        pattern: new RegExp(onlyNumberRegex),
+                                        message:
+                                            "Enter valid Number (only Numbers)",
+                                    },
+                                ]}
+                                label="Period :  "
+                                name="period"
+                            >
+                                <Input placeholder="Period" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12} style={{ padding: "5px" }}>
+                            <Form.Item
+                                className="formItem"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Room Number can't be empty",
+                                    },
+                                    {
+                                        pattern: new RegExp(onlyNumberRegex),
+                                        message:
+                                            "Enter valid Number (only Numbers)",
+                                    },
+                                ]}
+                                label="Cost Per Day :  "
+                                name="costPerDay"
+                            >
+                                <Input placeholder="Cost Per Day" />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -189,6 +206,6 @@ const AddBanquet = (props) => {
             }
         />
     );
-};
+}
 
-export default AddBanquet;
+export default EditRoom;

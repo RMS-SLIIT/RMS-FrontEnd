@@ -6,44 +6,47 @@ import {
     SearchOutlined,
 } from "@ant-design/icons";
 import { Button, Col, Divider, Input, Popconfirm, Row } from "antd";
-import React, { useEffect, useRef, useState } from "react";
-import { banquetDeleteSuccess, convertSearchUrl } from "../../../helper/helper";
-import {
-    deleteBanquetDetailsById,
-    getAllBanquetDetails,
-    getTableMulitiSearch,
-} from "../../../services/banquet/banquetServices";
-import { deleteConfirmMsg } from "../../../utils/messages";
 import Highlighter from "react-highlight-words";
+import React, { useEffect, useRef, useState } from "react";
+import {
+    convertSearchUrl,
+    roomBokingDeleteSuccess,
+} from "../../../helper/helper";
+import {
+    deleteRoomBookingByID,
+    getAllRoomBooking,
+    getTableMulitiSearch,
+} from "../../../services/roomBooking/roomBookingServices";
+
+import { deleteConfirmMsg } from "../../../utils/messages";
 import CustomCard from "../../atoms/CustomCard/CustomCard";
 import CustomTable from "../../atoms/Table/CustomTable";
-import AddBanquet from "./AddBanquet";
-import EditBanquet from "./EditBanquet";
+import AddRoomBooking from "./AddRoomBooking";
+import EditRoomBooking from "./EditRoomBooking";
 
-function Banquet() {
+function RoomBooking() {
     const [addVisible, setAddVisible] = useState(false);
-    const [banquetDetails, setBanquetDetails] = useState();
+    const [RoomBookingDetails, setRoomBookingDetails] = useState();
+    const [searchText, setSearchText] = useState();
     const [editVisible, setEditVisible] = useState(false);
     const [editData, setEditData] = useState([]);
-    const [searchText, setSearchText] = useState();
     const [searchedColumn, setSearchedColumn] = useState("");
 
     const [searchUrl, setSearchUrl] = useState({
-        guestName: "",
+        nic: "",
     });
     const searchInput = useRef();
-
     useEffect(() => {
-        getBanquetDetails();
+        getRoomBookingDetails();
     }, []);
 
     const cancel = (e) => {};
 
-    const getBanquetDetails = () => {
-        getAllBanquetDetails()
+    const getRoomBookingDetails = () => {
+        getAllRoomBooking()
             .then((data) => {
                 console.log(data);
-                setBanquetDetails(data);
+                setRoomBookingDetails(data);
             })
             .catch((err) => {});
     };
@@ -53,7 +56,7 @@ function Banquet() {
         setSearchedColumn(dataIndex);
         let updateUrl = {
             id: dataIndex === "id" ? value : searchUrl.id,
-            guestName: dataIndex === "guestName" ? value : searchUrl.guestName,
+            nic: dataIndex === "nic" ? value : searchUrl.nic,
         };
         setSearchUrl(updateUrl);
         searchApi(updateUrl);
@@ -61,8 +64,8 @@ function Banquet() {
 
     const searchApi = (updateUrl) => {
         let searchName = convertSearchUrl(updateUrl);
-        getTableMulitiSearch("banquetsearch", searchName).then((data) => {
-            setBanquetDetails(data);
+        getTableMulitiSearch("roombookingsearch", searchName).then((data) => {
+            setRoomBookingDetails(data);
         });
     };
 
@@ -77,7 +80,7 @@ function Banquet() {
         clearFilters();
         let updateUrl = {
             id: dataIndex === "id" ? "" : searchUrl.id,
-            guestName: dataIndex === "nic" ? "" : searchUrl.guestName,
+            nic: dataIndex === "nic" ? "" : searchUrl.nic,
         };
         setSearchUrl(updateUrl);
         searchApi(updateUrl);
@@ -100,9 +103,7 @@ function Banquet() {
                                 ref={searchInput}
                                 width="100%"
                                 placeholder={
-                                    dataIndex === "guestName"
-                                        ? "Search Quest Name"
-                                        : ""
+                                    dataIndex === "nic" ? "Search NIC" : ""
                                 }
                                 value={searchUrl[dataIndex]}
                                 onChange={(e) => onChangeSearch(e, dataIndex)}
@@ -174,13 +175,14 @@ function Banquet() {
                 text
             ),
     });
+
     const confirmDelete = (id) => {
         console.log("id is :" + id);
-        deleteBanquetDetailsById(id).then(
+        deleteRoomBookingByID(id).then(
             (res) => {
                 console.log(res);
-                getBanquetDetails();
-                banquetDeleteSuccess();
+                getRoomBookingDetails();
+                roomBokingDeleteSuccess();
             },
             (error) => {
                 console.log(error);
@@ -200,7 +202,7 @@ function Banquet() {
         setEditVisible(true);
     };
 
-    const showAddBanquet = () => {
+    const showAddRoomBooking = () => {
         setAddVisible(true);
     };
 
@@ -212,42 +214,44 @@ function Banquet() {
     };
     const columns = [
         {
-            title: "Guest Name",
-            dataIndex: "guestName",
-            key: "guestName",
-            ...getColumnSearchProps("guestName"),
+            title: "Name",
+            dataIndex: "fullName",
+            key: "fullName",
         },
         {
             title: "Mobile No",
             dataIndex: "mobileNumber",
             key: "mobileNumber",
         },
+
         {
-            title: "Event Type",
-            dataIndex: "eventType",
-            key: "eventType",
+            title: "Check In Date",
+            dataIndex: "checkInDate",
+            key: "checkInDate",
         },
         {
-            title: "Additional Service",
-            dataIndex: "additionalService",
-            key: "additionalService",
+            title: "Check Out Date",
+            dataIndex: "checkOutDate",
+            key: "checkOutDate",
+        },
+
+        {
+            title: "No Of Person",
+            dataIndex: "noOfPerson",
+            key: "noOfPerson",
         },
         {
-            title: "Decorations",
-            dataIndex: "decoration",
-            key: "decoration",
-        },
-        {
-            title: "Date Of Event",
-            dataIndex: "dateOfEvent",
-            key: "dateOfEvent",
+            title: "NIC",
+            dataIndex: "nic",
+            key: "nic",
+            ...getColumnSearchProps("nic"),
         },
         {
             title: "Action",
             dataIndex: "action",
             key: "action",
             align: "center",
-            render: (text, record = banquetDetails) => (
+            render: (text, record = RoomBookingDetails) => (
                 <span key={record.id}>
                     <EditOutlined
                         style={{ fontSize: "18px", color: "blue" }}
@@ -286,23 +290,26 @@ function Banquet() {
                 <Button
                     icon={<PlusOutlined />}
                     type="primary"
-                    onClick={() => showAddBanquet()}
+                    onClick={() => showAddRoomBooking()}
                     style={{ marginLeft: 950 }}
                 >
                     Add
                 </Button>
-                <CustomTable columns={columns} dataSource={banquetDetails} />
+                <CustomTable
+                    columns={columns}
+                    dataSource={RoomBookingDetails}
+                />
                 {addVisible ? (
-                    <AddBanquet
-                        getBanquetDetails={getBanquetDetails}
+                    <AddRoomBooking
+                        getRoomBookingDetails={getRoomBookingDetails}
                         setAddVisible={setAddVisible}
                         visible={addVisible}
                         handleOk={handleAddOk}
                         handleCancel={handleAddCancel}
                     />
                 ) : editVisible ? (
-                    <EditBanquet
-                        getBanquetDetails={getBanquetDetails}
+                    <EditRoomBooking
+                        getRoomBookingDetails={getRoomBookingDetails}
                         setEditVisible={setEditVisible}
                         editData={editData}
                         visible={editVisible}
@@ -317,4 +324,4 @@ function Banquet() {
     );
 }
 
-export default Banquet;
+export default RoomBooking;
