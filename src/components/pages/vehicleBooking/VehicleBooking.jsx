@@ -2,14 +2,14 @@ import {
     DeleteOutlined,
     EditOutlined,
     PlusOutlined,
-    QuestionCircleOutlined
+    QuestionCircleOutlined,
 } from "@ant-design/icons";
 import { Button, Divider, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
 import { VehicleBookingDeleteSuccess } from "../../../helper/helper";
 import {
     deleteVehicleBookingDetailsById,
-    getAllVehicleBookingDetails
+    getAllVehicleBookingDetails,
 } from "../../../services/vehicleBooking/vehicleBookingServices.js";
 
 import { deleteConfirmMsg } from "../../../utils/messages";
@@ -64,42 +64,42 @@ function VehicleBooking() {
         {
             title: "User Name",
             dataIndex: "userName",
-            key: "userName"
+            key: "userName",
         },
         {
             title: "Mobile No",
             dataIndex: "mobileNumber",
-            key: "mobileNumber"
+            key: "mobileNumber",
         },
         {
             title: "No Of Km ",
             dataIndex: "noOfKm",
-            key: "noOfKm"
+            key: "noOfKm",
         },
         {
             title: "Check In",
             dataIndex: "checkIn",
-            key: "checkIn"
+            key: "checkIn",
         },
         {
             title: "Check Out ",
             dataIndex: "checkOut",
-            key: "checkOut"
+            key: "checkOut",
         },
         {
             title: "Email",
             dataIndex: "email",
-            key: "email"
+            key: "email",
         },
         {
             title: "Cost",
             dataIndex: "cost",
-            key: "cost"
+            key: "cost",
         },
         {
             title: "NIC",
             dataIndex: "nic",
-            key: "nic"
+            key: "nic",
         },
         {
             title: "Action",
@@ -119,7 +119,7 @@ function VehicleBooking() {
                         icon={
                             <QuestionCircleOutlined
                                 style={{
-                                    color: "red"
+                                    color: "red",
                                 }}
                             />
                         }
@@ -131,13 +131,13 @@ function VehicleBooking() {
                         <DeleteOutlined
                             style={{
                                 color: "red",
-                                fontSize: "18px"
+                                fontSize: "18px",
                             }}
                         />
                     </Popconfirm>
                 </span>
-            )
-        }
+            ),
+        },
     ];
     return (
         <div>
@@ -146,7 +146,7 @@ function VehicleBooking() {
                     icon={<PlusOutlined />}
                     type="primary"
                     onClick={() => showAddVehicleBooking()}
-                    style={{ marginLeft: 1150 }}
+                    style={{ marginLeft: 950 }}
                 >
                     Add
                 </Button>
